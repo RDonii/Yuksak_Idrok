@@ -4,7 +4,7 @@ from flask.helpers import url_for
 from flask.json import jsonify
 from sqlalchemy.sql.functions import func
 from werkzeug.utils import redirect, secure_filename
-from models.models import Categories, Courses, Teachers, Individuals, Groups, Certifications, News, Awards, create_db
+from models.models import Categories, Courses, Teachers, Individuals, Groups, Certifications, News, Awards, create_db, db
 from flask_cors import CORS
 import uuid
 
@@ -54,7 +54,7 @@ def create_app(test_config=None):
             if name and len(name) != 0:
                 check_query = Categories.query.filter(func.lower(Categories.name)==func.lower(name)).one_or_none()
                 if check_query:
-                    abort(400, 'Bu nomdagi kategoriya mavjud.')
+                    abort(422, 'Bu nomdagi kategoriya mavjud.')
                 new_categoty = Categories(name)
                 new_categoty.insert()
                 return jsonify({
@@ -74,30 +74,68 @@ def create_app(test_config=None):
 
     @app.route('/categories/<int:category_id>', methods=['GET', 'PATCH', 'DELETE'])
     def category_by_id(category_id):
-        category = Categories.query.filted(Categories.id==category_id).one_or_none()
+        category = Categories.query.filter(Categories.id==category_id).one_or_none()
         if category is None:
             abort(404, 'Ushbu kategoriya mavjud emas.')
-        
+
         if request.method == 'PATCH':
             data = request.get_json()
             name = data.get("name")
 
-            try:
-                category.name = name
-                category.update()
-                return jsonify({
-                    'success': True
-                })
-            except:
-                abort(500, 'Serverda ichki xatolik.')
+            check_query = Categories.query.filter(func.lower(Categories.name)==func.lower(name)).one_or_none()
+            if check_query:
+                abort(400, 'Bu nomdagi kategoriya mavjud.')
+
+            if name and len(name) != 0:
+                try:
+                    category.name = name
+                    category.update()
+                    return jsonify({
+                        'success': True
+                    })
+                except:
+                    db.session.rollback()
+                    abort(500, 'Serverda ichki xatolik.')
+            else:
+                abort(400, 'Yangi kategoriyaga nom bering.')
+
+            
 
         if request.method == 'DELETE':
+            courses = Courses.query.filter(Courses.category_id == category_id).all()
+
             try:
+                #agar categoriyaga tegishli kurslar mavjud bo'lsa avval ularni o'chiradi.
+                if len(courses) != 0:
+                    for c in courses:
+                        #agar kursga tegishli guruhlar mavjud bo'lsa avval ularni o'chiradi.
+                        individuals = Individuals.query.filter(Individuals.course_id == c.id).all()
+                        groups = Groups.query.filter(Groups.course_id == c.id).all()
+
+                        try:
+                            if len(individuals) != 0:
+                                for i in individuals:
+                                    i.delete()
+
+                            if len(groups) != 0:
+                                for g in groups:
+                                    g.delete()
+
+                            c.delete()
+
+                            return jsonify({
+                                'success': True
+                            })
+                        except:
+                            db.session.rollback()
+                            abort(500, 'Serverda ichki xatolik.')
+
                 category.delete()
                 return jsonify({
                     'success': True
                 })
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
 
         category_name = category.name
@@ -140,7 +178,11 @@ def create_app(test_config=None):
             else:
                 abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
 
-            category_query = Categories.query.filter_by(func.lower(Categories.name) == func.lower(title)).one_or_none()
+            check_query = Courses.query.filter(func.lower(Courses.title)==func.lower(title)).one_or_none()
+            if check_query:
+                abort(422, 'Bu nomdagi kurs mavjud.')
+
+            category_query = Categories.query.filter(func.lower(Categories.name) == func.lower(category_name)).one_or_none()
             if category_query is None:
                 abort(404, 'Mavjud kategoriyalardan birini tanlang.')
             category_id = category_query.id
@@ -149,6 +191,7 @@ def create_app(test_config=None):
                 new_course = Courses(category_id, title, img, description)
                 new_course.insert()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             
             return jsonify({
@@ -175,12 +218,26 @@ def create_app(test_config=None):
             abort(404, "So`ralgan kurs bazada mavjud emas.")
 
         if request.method == 'DELETE':
+            #agar kursga tegishli guruhlar mavjud bo'lsa avval ularni o'chiradi.
+            individuals = Individuals.query.filter(Individuals.course_id == course_id).all()
+            groups = Groups.query.filter(Groups.course_id == course_id).all()
+
             try:
+                if len(individuals) != 0:
+                    for i in individuals:
+                        i.delete()
+
+                if len(groups) != 0:
+                    for g in groups:
+                        g.delete()
+
                 course.delete()
+
                 return jsonify({
                     'success': True
                 })
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
 
         if request.method == 'PATCH':
@@ -190,13 +247,16 @@ def create_app(test_config=None):
             file = request.files['image']
 
             if category_name:
-                category_query = Categories.query.filter_by(func.lower(Categories.name)==func.lower(category_name)).one_or_none()
+                category_query = Categories.query.filter(func.lower(Categories.name)==func.lower(category_name)).one_or_none()
                 if category_query is None:
                     abort(404, 'Mavjud kategoriyalardan birini tanlang.')
                 category_id = category_query.id
                 course.category_id = category_id
 
             if title:
+                check_query = Courses.query.filter(func.lower(Courses.title)==func.lower(title)).one_or_none()
+                if check_query:
+                    abort(422, 'Bu nomdagi kurs mavjud.')
                 course.title = title
             
             if description:
@@ -269,6 +329,7 @@ def create_app(test_config=None):
                 new_individual = Individuals(course_id, teacher_id, members, price, start, end, duration, days, in_month, active)
                 new_individual.insert()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             finally:
                 return jsonify({
@@ -326,6 +387,7 @@ def create_app(test_config=None):
 
                 individual.update()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             finally:
                 return jsonify({
@@ -336,6 +398,7 @@ def create_app(test_config=None):
             try:
                 individual.delete()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             finally:
                 return({
@@ -391,6 +454,7 @@ def create_app(test_config=None):
                 new_group = Groups(course_id, teacher_id, members, price, start, end, duration, days, in_month, active)
                 new_group.insert()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             finally:
                 return jsonify({
@@ -448,6 +512,7 @@ def create_app(test_config=None):
 
                 group.update()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             finally:
                 return jsonify({
@@ -458,6 +523,7 @@ def create_app(test_config=None):
             try:
                 group.delete()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             finally:
                 return({
@@ -498,6 +564,7 @@ def create_app(test_config=None):
                 new_teacher = Teachers(first_name, last_name, description, img)
                 new_teacher.insert()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             finally:
                 return jsonify({
@@ -543,6 +610,7 @@ def create_app(test_config=None):
             try:
                 teacher.update()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             finally:
                 return jsonify({
@@ -553,6 +621,7 @@ def create_app(test_config=None):
             try:
                 teacher.delete()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             finally:
                 return jsonify({
@@ -590,6 +659,7 @@ def create_app(test_config=None):
                 new_certification = Certifications(teacher_id, title, given_by, credential, img)
                 new_certification.insert()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             finally:
                 return jsonify({
@@ -640,6 +710,7 @@ def create_app(test_config=None):
             try:
                 certification.update()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             finally:
                 return jsonify({
@@ -650,6 +721,7 @@ def create_app(test_config=None):
             try:
                 certification.delete()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             finally:
                 return jsonify({
@@ -688,6 +760,7 @@ def create_app(test_config=None):
                 new_award = Awards(title, given_by, given_year, credential, img)
                 new_award.insert()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             finally:
                 return jsonify({
@@ -738,6 +811,7 @@ def create_app(test_config=None):
             try:
                 award.update()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             finally:
                 return jsonify({
@@ -748,6 +822,7 @@ def create_app(test_config=None):
             try:
                 award.delete()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             finally:
                 return jsonify({
@@ -812,6 +887,7 @@ def create_app(test_config=None):
                 news = News(title, subtitle, img, video)
                 news.insert()
             except:
+                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
             
             return jsonify({
@@ -864,6 +940,7 @@ def create_app(test_config=None):
                     'success': True,
                     })                   
             except:
+                db.session.rollback()
                 abort(500, "Serverda ichki xatolik")
 
         elif request.method=="DELETE":
@@ -875,7 +952,8 @@ def create_app(test_config=None):
                      'deleted': news_id
                 })
             except:
-                abort(422)
+                db.session.rollback()
+                abort(422, 'Bazadan o`chirishda xatolik yuz berdi.')
 
         news_formated = [n.format() for n in news]
         return jsonify({
@@ -885,14 +963,48 @@ def create_app(test_config=None):
     #medialarni tasvirlash uchun endpoint
     @app.route('/display/<filename>')
     def media_display(filename):
-        return redirect(url_for('static', filename='/uploads'+filename), code=301)
+        return redirect(url_for('static', filename=('/uploads/' + filename)), code=301)
 
+    #errorlarni front endga chiroyli yetkazib berish uchun
+
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+            'error': 404,
+            'message': error.description
+        })
+    
+    @app.errorhandler(400)
+    def bad_request(error):
+        return jsonify({
+            'error': 400,
+            'message': error.description
+        })
+    
+    @app.errorhandler(415)
+    def unsupported_media_type(error):
+        return jsonify({
+            'error': 415,
+            'message': error.description
+        })
+    
+    @app.errorhandler(422)
+    def unprocessable(error):
+        return jsonify({
+            'error': 422,
+            'message': error.description
+        })
+
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        return jsonify ({
+            'error': 500,
+            'message': error.description
+        })
 
     return app
 
 app = create_app()
 
 if __name__=='__main__':
-    server_name = 'yuksak_idrok.com:5000'
-    app.config['SERVER_NAME'] = server_name
     app.run(debug=True)
