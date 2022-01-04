@@ -4,10 +4,10 @@ from flask.helpers import url_for
 from flask.json import jsonify
 from sqlalchemy.sql.functions import func
 from werkzeug.utils import redirect, secure_filename
-from models.models import Categories, Courses, Teachers, Individuals, Groups, Certifications, News, Awards, create_db, db
+from database.models import Categories, Courses, Teachers, Individuals, Groups, Certifications, News, Awards, create_db, db
 from flask_cors import CORS
 import uuid
-
+from auth.auth import get_loged, login_required
 
 #yordamchi funksiyalar
 
@@ -38,8 +38,20 @@ def create_app(test_config=None):
     
 
 
-    @app.route('/', methods=['GET'])
-    def home_page():
+    @app.route('/login', methods=['GET', 'POST'])
+    def login():
+        if request.method == 'POST':
+            data = request.get_json()
+
+            username = data.get('username')
+            password = data.get('password')
+
+            if username and password:
+                token = get_loged(username, password)
+            else:
+                abort(400, 'Parol va Username kiritilishi shart.')
+            return token
+
         return 'Not implemented yet'
 
 
@@ -158,10 +170,10 @@ def create_app(test_config=None):
     @app.route('/courses', methods=["GET", "POST"])
     def all_courses():
         if request.method == 'POST':
-            category_name = request.form['category']
-            title = request.form['title']
-            description = request.form['description']
-            file = request.files['image']
+            category_name = request.form.get('category')
+            title = request.form.get('title')
+            description = request.form.get('description')
+            file = request.files.get('image')
 
             if category_name is None or title is None:
                 abort(400, 'Kurs nomi va kategoriyasi kiritilishi shart')
@@ -207,6 +219,8 @@ def create_app(test_config=None):
 
         return jsonify({
             "courses": courses_paginated,
+            "page": page,
+            "limit": limit,
             "count": count
         })
 
@@ -241,10 +255,10 @@ def create_app(test_config=None):
                 abort(500, 'Serverda ichki xatolik.')
 
         if request.method == 'PATCH':
-            category_name = request.form['category']
-            title = request.form['title']
-            description = request.form['description']
-            file = request.files['image']
+            category_name = request.form.get('category')
+            title = request.form.get('title')
+            description = request.form.get('description')
+            file = request.files.get('image')
 
             if category_name:
                 category_query = Categories.query.filter(func.lower(Categories.name)==func.lower(category_name)).one_or_none()
@@ -254,6 +268,8 @@ def create_app(test_config=None):
                 course.category_id = category_id
 
             if title:
+                if len(title) == 0:
+                    abort(400, "Bo'sh kurs nomi qabul qilinmaydi.")
                 check_query = Courses.query.filter(func.lower(Courses.title)==func.lower(title)).one_or_none()
                 if check_query:
                     abort(422, 'Bu nomdagi kurs mavjud.')
@@ -279,7 +295,7 @@ def create_app(test_config=None):
                 "seccess": True
             })
 
-        course_formated = [course.format() for course in course]
+        course_formated = [course.format()]
 
         return jsonify({
             "course": course_formated
@@ -328,13 +344,12 @@ def create_app(test_config=None):
             try:
                 new_individual = Individuals(course_id, teacher_id, members, price, start, end, duration, days, in_month, active)
                 new_individual.insert()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            finally:
                 return jsonify({
                     'success': True
                 })
+            except:
+                db.session.rollback()
+                abort(500, 'Serverda ichki xatolik.')
 
         individuals = Individuals.query.filter(Individuals.course_id==course_id).all()
         individuals_formated = [i.format() for i in individuals]
@@ -386,26 +401,24 @@ def create_app(test_config=None):
                     individual.active = active
 
                 individual.update()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            finally:
                 return jsonify({
                     'success': True
                 })
+            except:
+                db.session.rollback()
+                abort(500, 'Serverda ichki xatolik.')
             
         if request.method == 'DELETE':
             try:
                 individual.delete()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            finally:
                 return({
                     'success': True
-                })    
+                })
+            except:
+                db.session.rollback()
+                abort(500, 'Serverda ichki xatolik.')    
         
-        individual_formated = [i.format() for i in individual]
+        individual_formated = [individual.format()]
         return ({
             'individual': individual_formated
         })
@@ -453,20 +466,19 @@ def create_app(test_config=None):
             try:
                 new_group = Groups(course_id, teacher_id, members, price, start, end, duration, days, in_month, active)
                 new_group.insert()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            finally:
                 return jsonify({
                     'success': True
                 })
+            except:
+                db.session.rollback()
+                abort(500, 'Serverda ichki xatolik.')                
 
         groups = Groups.query.filter(Groups.course_id==course_id).all()
         groups_formated = [g.format() for g in groups]
         count = len(groups_formated)
 
         return jsonify({
-            'individuals': groups_formated,
+            'groups': groups_formated,
             'count': count
         })
 
@@ -511,45 +523,39 @@ def create_app(test_config=None):
                     group.active = active
 
                 group.update()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            finally:
                 return jsonify({
                     'success': True
                 })
+            except:
+                db.session.rollback()
+                abort(500, 'Serverda ichki xatolik.')                
             
         if request.method == 'DELETE':
             try:
                 group.delete()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            finally:
                 return({
                     'success': True
-                })    
+                })
+            except:
+                db.session.rollback()
+                abort(500, 'Serverda ichki xatolik.')                    
         
-        group_formated = [g.format() for g in group]
+        group_formated = group.format()
         return ({
-            'individual': group_formated
+            'group': group_formated
         })
 
     #o'qituvchi va sertifikatlar uchun endpointlar
     @app.route('/teachers', methods=["GET", "POST"])
     def all_teachers():
         if request.method == 'POST':
-            first_name = request.form['first_name']
-            last_name = request.form['last_name']
-            description = request.form['description']
-            file = request.files['image']
+            first_name = request.form.get('first_name')
+            last_name = request.form.get('last_name', '')
+            description = request.form.get('description', '')
+            file = request.files.get('image')
 
             if first_name is None:
                 abort(400, 'O`qituvchi ismini kiritish zarur.')
-            if last_name is None:
-                last_name = ''
-            if description is None:
-                description = ''
             if file is None:
                 img = ''
             elif allowed_img(file.filename):
@@ -563,13 +569,12 @@ def create_app(test_config=None):
             try:
                 new_teacher = Teachers(first_name, last_name, description, img)
                 new_teacher.insert()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            finally:
                 return jsonify({
                     'success': True
                 })
+            except:
+                db.session.rollback()
+                abort(500, 'Serverda ichki xatolik.')                
 
         teachers = Teachers.query.all()
         teachers_formated = [t.format() for t in teachers]
@@ -586,10 +591,10 @@ def create_app(test_config=None):
             abort(404, 'So`ralgan o`qituvchi bazada mavjud emas.')
         
         if request.method == 'PATCH':
-            first_name = request.form['first_name']
-            last_name = request.form['last_name']
-            description = request.form['description']
-            file = request.files['image']
+            first_name = request.form.get('first_name')
+            last_name = request.form.get('last_name')
+            description = request.form.get('description')
+            file = request.files.get('image')
             
             if first_name:
                 teacher.first_name = first_name
@@ -609,28 +614,67 @@ def create_app(test_config=None):
                     abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
             try:
                 teacher.update()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            finally:
                 return jsonify({
                     'success': True
                 })
+            except:
+                db.session.rollback()
+                abort(500, 'Serverda ichki xatolik.')                
             
         if request.method == 'DELETE':
+            individuals = Individuals.query.filter(Individuals.teacher_id==teacher_id).first()
+            groups = Groups.query.filter(Groups.teacher_id==teacher_id).first()
+            if individuals or groups:
+                abort(422, 'Avval {} dars o`tadigan guruhlar uchun yang o`qituvchi tayinlang.'.format(teacher.first_name) )
             try:
                 teacher.delete()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            finally:
                 return jsonify({
                     'success': True
                 })
+            except:
+                db.session.rollback()
+                abort(500, 'Serverda ichki xatolik.')                
 
-        teacher_formated = [t.format for t in teacher]
+        teacher_formated = teacher.format()
         return jsonify({
             'teacher': teacher_formated
+        })
+
+
+    @app.route('/teachers/<int:teacher_id>/courses')
+    def courses_by_teacher(teacher_id):
+        teacher = Teachers.query.filter(Teachers.id==teacher_id).one_or_none()
+        if teacher is None:
+            abort(404, 'So`ralgan o`qituvchi bazada mavjud emas.')
+
+        individuals = Individuals.query.filter(Individuals.teacher_id==teacher_id).all()
+        individuals_formated = [i.format() for i in individuals]
+        count_individuals =len(individuals_formated)
+
+        groups = Groups.query.filter(Groups.teacher_id==teacher_id).all()
+        groups_formated = [g.format() for g in groups]
+        count_groups = len(groups_formated)
+
+        return jsonify({
+            'individuals': individuals_formated,
+            'count_individuals': count_individuals,
+            'groups': groups_formated,
+            'count_groups': count_groups
+        })
+
+    @app.route('/teachers/<int:teacher_id>/certifications')
+    def certifications_by_teacher(teacher_id):
+        teacher = Teachers.query.filter(Teachers.id==teacher_id).one_or_none()
+        if teacher is None:
+            abort(404, 'So`ralgan o`qituvchi bazada mavjud emas.')
+
+        certifications = Certifications.query.filter(Certifications.teacher_id==teacher_id).all()
+        certifications_formated = [c.format() for c in certifications]
+        count = len(certifications_formated)
+
+        return jsonify({
+            'certifications': certifications_formated,
+            'count': count,
         })
 
     @app.route('/certifications', methods = ["GET", "POST"])
@@ -640,7 +684,7 @@ def create_app(test_config=None):
             title = request.form.get('title')
             given_by = request.form.get('given_by', '')
             credential = request.form.get('credential', '')
-            file = request.files['image']
+            file = request.files.get('image')
 
             if teacher_id is None:
                 abort(400, 'O`qituvchilardan birini tanlang.')
@@ -658,13 +702,13 @@ def create_app(test_config=None):
             try:
                 new_certification = Certifications(teacher_id, title, given_by, credential, img)
                 new_certification.insert()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            finally:
                 return jsonify({
                     'success': True
                 })
+            except:
+                db.session.rollback()
+                abort(500, 'Serverda ichki xatolik.')
+                
     
         certifications = Certifications.query.all()
         certifications_formated = [c.format() for c in certifications]
@@ -686,7 +730,7 @@ def create_app(test_config=None):
             title = request.form.get('title')
             given_by = request.form.get('given_by')
             credential = request.form.get('credential')
-            file = request.files['image']
+            file = request.files.get('image')
 
             if teacher_id:
                 certification.teacher_id = teacher_id
@@ -709,26 +753,24 @@ def create_app(test_config=None):
             
             try:
                 certification.update()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            finally:
                 return jsonify({
                     'success': True
                 })
+            except:
+                db.session.rollback()
+                abort(500, 'Serverda ichki xatolik.')                
             
         if request.method == 'DELETE':
             try:
                 certification.delete()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            finally:
                 return jsonify({
                     'success': True
                 })
+            except:
+                db.session.rollback()
+                abort(500, 'Serverda ichki xatolik.')
 
-        certification_formated = [c.format() for c in certification]
+        certification_formated = certification.format()
         return jsonify({
             "certification": certification_formated
         })
@@ -740,7 +782,7 @@ def create_app(test_config=None):
             given_by = request.form.get('given_by', '')
             given_year = request.form.get('given_year', '')
             credential = request.form.get('credential', '')
-            file = request.files['image']
+            file = request.files.get('image')
 
             if title is None:
                 abort(400, 'Mukofot nomini kiriting.')
@@ -752,23 +794,22 @@ def create_app(test_config=None):
                 filename = str(uuid.uuid4()) + '.' + filename.split('.')[::-1][0]
                 filename = secure_filename(filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                img = (request.base_url).replace(url_for('all_awards', '/display/')) + filename
+                img = (request.base_url).replace(url_for('all_awards'), '/display/') + filename
             else:
                 abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
             
             try:
                 new_award = Awards(title, given_by, given_year, credential, img)
                 new_award.insert()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            finally:
                 return jsonify({
                     'success': True
                 })
+            except:
+                db.session.rollback()
+                abort(500, 'Serverda ichki xatolik.')                
 
         awards = Awards.query.all()
-        awards_formated = [a.format for a in awards]
+        awards_formated = [a.format() for a in awards]
         count = len(awards_formated)
 
         return jsonify({
@@ -776,7 +817,7 @@ def create_app(test_config=None):
             "count": count
         })
 
-    app.route('/awards/<int:award_id>', methods=['GET', 'PATCH', 'DELETE'])
+    @app.route('/awards/<int:award_id>', methods=['GET', 'PATCH', 'DELETE'])
     def award_by_id(award_id):
         award = Awards.query.filter(Awards.id==award_id).one_or_none()
         if award is None:
@@ -787,7 +828,7 @@ def create_app(test_config=None):
             given_by = request.form.get('given_by')
             given_year = request.form.get('given_year')
             credential = request.form.get('credential')
-            file = request.files['image']
+            file = request.files.get('image')
             
             if title:
                 award.title = title
@@ -810,26 +851,24 @@ def create_app(test_config=None):
             
             try:
                 award.update()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            finally:
                 return jsonify({
                     'success': True
                 })
+            except:
+                db.session.rollback()
+                abort(500, 'Serverda ichki xatolik.')
         
         if request.method == 'DELETE':
             try:
                 award.delete()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            finally:
                 return jsonify({
                     'success': True
-                })     
+                })
+            except:
+                db.session.rollback()
+                abort(500, 'Serverda ichki xatolik.')                     
         
-        award_formated = [a.format() for a in award]
+        award_formated = award.format()
         return jsonify({
             'award': award_formated
         })
@@ -851,10 +890,10 @@ def create_app(test_config=None):
             })
 
         elif request.method == 'POST':
-            title = request.form['title']
-            subtitle = request.form['subtitle']
-            image = request.files['image']
-            video = request.files['video']
+            title = request.form.get('title')
+            subtitle = request.form.get('subtitle')
+            image = request.files.get('image')
+            video = request.files.get('video')
 
             if title is None or subtitle is None:
                 abort(400, 'Yangilikka sarlavha va matn kiritilishi shart')
@@ -879,20 +918,19 @@ def create_app(test_config=None):
                 v_filename = str(uuid.uuid4()) + '.' +v_filename.split('.')[::-1][0]
                 v_filename = secure_filename(v_filename)
                 video.save(os.path.join(app.config['UPLOAD_FOLDER'], v_filename))
-                img = (request.base_url).replace(url_for('news'), '/display/') + v_filename
+                video = (request.base_url).replace(url_for('news'), '/display/') + v_filename
             else:
                 abort(415, 'Fayl ruxsat etilmagan formatda yuborildi. Ruxsat etilgan formatlar: {ALLOWED_VIDEO_EXTENSIONS}')
 
             try:
                 news = News(title, subtitle, img, video)
                 news.insert()
+                return jsonify({
+                    'success': True
+                })
             except:
                 db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
-            
-            return jsonify({
-                'success': True
-            })
 
     @app.route('/news/<int:news_id>', methods=['GET', 'PATCH', 'DELETE'])
     def news_by_id(news_id):
@@ -902,10 +940,10 @@ def create_app(test_config=None):
 
         if request.method=="PATCH":
             try:
-                new_img = request.files['image']
-                new_video = request.files['video']
-                new_title = request.form['title']
-                new_subtitle = request.form['subtitle']
+                new_img = request.files.get('image')
+                new_video = request.files.get('video')
+                new_title = request.form.get('title')
+                new_subtitle = request.form.get('subtitle')
 
                 if new_img:
                     if allowed_img(new_img.filename):
@@ -949,13 +987,12 @@ def create_app(test_config=None):
 
                 return jsonify({
                     'success': True,
-                     'deleted': news_id
                 })
             except:
                 db.session.rollback()
                 abort(422, 'Bazadan o`chirishda xatolik yuz berdi.')
 
-        news_formated = [n.format() for n in news]
+        news_formated = news.format()
         return jsonify({
             'news': news_formated
         })

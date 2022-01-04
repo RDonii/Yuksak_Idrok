@@ -1,0 +1,674 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.4
+-- Dumped by pg_dump version 13.4
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: awards; Type: TABLE; Schema: public; Owner: rdoni
+--
+
+CREATE TABLE public.awards (
+    id integer NOT NULL,
+    title character varying NOT NULL,
+    given_by character varying,
+    given_year character varying,
+    credential character varying,
+    img character varying
+);
+
+
+ALTER TABLE public.awards OWNER TO rdoni;
+
+--
+-- Name: awards_id_seq; Type: SEQUENCE; Schema: public; Owner: rdoni
+--
+
+CREATE SEQUENCE public.awards_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.awards_id_seq OWNER TO rdoni;
+
+--
+-- Name: awards_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: rdoni
+--
+
+ALTER SEQUENCE public.awards_id_seq OWNED BY public.awards.id;
+
+
+--
+-- Name: categories; Type: TABLE; Schema: public; Owner: rdoni
+--
+
+CREATE TABLE public.categories (
+    id integer NOT NULL,
+    name character varying NOT NULL
+);
+
+
+ALTER TABLE public.categories OWNER TO rdoni;
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: rdoni
+--
+
+CREATE SEQUENCE public.categories_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.categories_id_seq OWNER TO rdoni;
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: rdoni
+--
+
+ALTER SEQUENCE public.categories_id_seq OWNED BY public.categories.id;
+
+
+--
+-- Name: certifications; Type: TABLE; Schema: public; Owner: rdoni
+--
+
+CREATE TABLE public.certifications (
+    id integer NOT NULL,
+    teacher_id integer,
+    title character varying NOT NULL,
+    given_by character varying,
+    credential character varying,
+    img character varying
+);
+
+
+ALTER TABLE public.certifications OWNER TO rdoni;
+
+--
+-- Name: certifications_id_seq; Type: SEQUENCE; Schema: public; Owner: rdoni
+--
+
+CREATE SEQUENCE public.certifications_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.certifications_id_seq OWNER TO rdoni;
+
+--
+-- Name: certifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: rdoni
+--
+
+ALTER SEQUENCE public.certifications_id_seq OWNED BY public.certifications.id;
+
+
+--
+-- Name: courses; Type: TABLE; Schema: public; Owner: rdoni
+--
+
+CREATE TABLE public.courses (
+    id integer NOT NULL,
+    category_id integer NOT NULL,
+    title character varying NOT NULL,
+    img character varying,
+    description character varying
+);
+
+
+ALTER TABLE public.courses OWNER TO rdoni;
+
+--
+-- Name: courses_id_seq; Type: SEQUENCE; Schema: public; Owner: rdoni
+--
+
+CREATE SEQUENCE public.courses_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.courses_id_seq OWNER TO rdoni;
+
+--
+-- Name: courses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: rdoni
+--
+
+ALTER SEQUENCE public.courses_id_seq OWNED BY public.courses.id;
+
+
+--
+-- Name: groups; Type: TABLE; Schema: public; Owner: rdoni
+--
+
+CREATE TABLE public.groups (
+    id integer NOT NULL,
+    course_id integer NOT NULL,
+    teacher_id integer NOT NULL,
+    members integer,
+    price integer,
+    start character varying,
+    "end" character varying,
+    duration integer,
+    days character varying,
+    in_month integer,
+    active boolean NOT NULL
+);
+
+
+ALTER TABLE public.groups OWNER TO rdoni;
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE; Schema: public; Owner: rdoni
+--
+
+CREATE SEQUENCE public.groups_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.groups_id_seq OWNER TO rdoni;
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: rdoni
+--
+
+ALTER SEQUENCE public.groups_id_seq OWNED BY public.groups.id;
+
+
+--
+-- Name: individuals; Type: TABLE; Schema: public; Owner: rdoni
+--
+
+CREATE TABLE public.individuals (
+    id integer NOT NULL,
+    course_id integer NOT NULL,
+    teacher_id integer NOT NULL,
+    members integer,
+    price integer,
+    start character varying,
+    "end" character varying,
+    duration integer,
+    days character varying,
+    in_month integer,
+    active boolean NOT NULL
+);
+
+
+ALTER TABLE public.individuals OWNER TO rdoni;
+
+--
+-- Name: individuals_id_seq; Type: SEQUENCE; Schema: public; Owner: rdoni
+--
+
+CREATE SEQUENCE public.individuals_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.individuals_id_seq OWNER TO rdoni;
+
+--
+-- Name: individuals_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: rdoni
+--
+
+ALTER SEQUENCE public.individuals_id_seq OWNED BY public.individuals.id;
+
+
+--
+-- Name: news; Type: TABLE; Schema: public; Owner: rdoni
+--
+
+CREATE TABLE public.news (
+    id integer NOT NULL,
+    img character varying,
+    video character varying,
+    title character varying,
+    subtitle text
+);
+
+
+ALTER TABLE public.news OWNER TO rdoni;
+
+--
+-- Name: news_id_seq; Type: SEQUENCE; Schema: public; Owner: rdoni
+--
+
+CREATE SEQUENCE public.news_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.news_id_seq OWNER TO rdoni;
+
+--
+-- Name: news_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: rdoni
+--
+
+ALTER SEQUENCE public.news_id_seq OWNED BY public.news.id;
+
+
+--
+-- Name: teachers; Type: TABLE; Schema: public; Owner: rdoni
+--
+
+CREATE TABLE public.teachers (
+    id integer NOT NULL,
+    first_name character varying NOT NULL,
+    last_name character varying,
+    description character varying,
+    img character varying
+);
+
+
+ALTER TABLE public.teachers OWNER TO rdoni;
+
+--
+-- Name: teachers_id_seq; Type: SEQUENCE; Schema: public; Owner: rdoni
+--
+
+CREATE SEQUENCE public.teachers_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.teachers_id_seq OWNER TO rdoni;
+
+--
+-- Name: teachers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: rdoni
+--
+
+ALTER SEQUENCE public.teachers_id_seq OWNED BY public.teachers.id;
+
+
+--
+-- Name: awards id; Type: DEFAULT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.awards ALTER COLUMN id SET DEFAULT nextval('public.awards_id_seq'::regclass);
+
+
+--
+-- Name: categories id; Type: DEFAULT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.categories_id_seq'::regclass);
+
+
+--
+-- Name: certifications id; Type: DEFAULT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.certifications ALTER COLUMN id SET DEFAULT nextval('public.certifications_id_seq'::regclass);
+
+
+--
+-- Name: courses id; Type: DEFAULT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.courses ALTER COLUMN id SET DEFAULT nextval('public.courses_id_seq'::regclass);
+
+
+--
+-- Name: groups id; Type: DEFAULT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.groups ALTER COLUMN id SET DEFAULT nextval('public.groups_id_seq'::regclass);
+
+
+--
+-- Name: individuals id; Type: DEFAULT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.individuals ALTER COLUMN id SET DEFAULT nextval('public.individuals_id_seq'::regclass);
+
+
+--
+-- Name: news id; Type: DEFAULT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.news ALTER COLUMN id SET DEFAULT nextval('public.news_id_seq'::regclass);
+
+
+--
+-- Name: teachers id; Type: DEFAULT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.teachers ALTER COLUMN id SET DEFAULT nextval('public.teachers_id_seq'::regclass);
+
+
+--
+-- Data for Name: awards; Type: TABLE DATA; Schema: public; Owner: rdoni
+--
+
+COPY public.awards (id, title, given_by, given_year, credential, img) FROM stdin;
+1	Yil markazi	WWC inc.		link/to/confirm	http://127.0.0.1:5000/display/c9cf3305-ed2f-4f30-b945-a6df47453e50.jpg
+2	in TOP5 of 2021	XTV	2021	link/to/news/about/this	http://127.0.0.1:5000/display/48207aae-fa10-4e41-bc04-9cc085c048f5.jpg
+\.
+
+
+--
+-- Data for Name: categories; Type: TABLE DATA; Schema: public; Owner: rdoni
+--
+
+COPY public.categories (id, name) FROM stdin;
+1	Til kurslari
+3	IT sohalari
+4	Abiturientlar uchun
+\.
+
+
+--
+-- Data for Name: certifications; Type: TABLE DATA; Schema: public; Owner: rdoni
+--
+
+COPY public.certifications (id, teacher_id, title, given_by, credential, img) FROM stdin;
+1	4	Data Guru	WWC inc.	link/to/confirm	http://127.0.0.1:5000/display/813bd65d-70cb-4fb0-a43b-ae00e27e4c55.jpg
+3	2	Xalq Ta`lim A`lochisi			http://127.0.0.1:5000/display/ebfea31e-f5b2-4f9b-bd36-ef951218c306.jpg
+2	4	Full Stack Developer	WWC inc.	link/to/confirm	http://127.0.0.1:5000/display/e6286182-8a29-4c37-aad5-6b02cb57b994.jpg
+\.
+
+
+--
+-- Data for Name: courses; Type: TABLE DATA; Schema: public; Owner: rdoni
+--
+
+COPY public.courses (id, category_id, title, img, description) FROM stdin;
+1	1	English	http://127.0.0.1:5000/display/a3c326b4-8bc6-47cf-a5af-7d32eb307dff.jpg	Ingliz tilini oson o`rganing.
+2	4	Matematika	http://127.0.0.1:5000/display/0bb44c0c-0eae-475c-a1ac-4963109d56e9.jpg	100% natija
+3	3	Python-Backend	http://127.0.0.1:5000/display/90eff933-0e2d-46c9-9166-b3e60e025a0b.jpg	Python Basics
+4	4	Fizika	http://127.0.0.1:5000/display/3a0e45ec-00c4-4d51-990f-7d977d238925.jpg	100% natijaga erishing.
+5	4	Biologiya	http://127.0.0.1:5000/display/8b44b0b2-2796-445c-9d64-c4103d92a120.jpg	100% natijaga erishing.
+6	3	Node.js	http://127.0.0.1:5000/display/b497693e-133c-4487-ad04-1b0690c218ef.jpg	Boshlang'ichlar uchun
+7	3	JavaScript	http://127.0.0.1:5000/display/0c9458ff-e0f4-430a-8221-f180684ba5c2.jpg	\N
+8	1	Rus tili	http://127.0.0.1:5000/display/cf2bb0fd-fc61-47aa-a1ff-679fbf7fc2fe.jpg	\N
+10	3	HTML/CSS	http://127.0.0.1:5000/display/eac42e38-0785-4c4a-82fc-40b63d08d516.jpg	\N
+11	1	Fransuz tili	http://127.0.0.1:5000/display/a4bec01c-7485-4ad3-8273-4cebc9efe7b9.jpg	\N
+9	1	Spain	http://127.0.0.1:5000/display/0dbc59f8-d744-48c4-9fe2-8caf6f39986f.jpg	\N
+\.
+
+
+--
+-- Data for Name: groups; Type: TABLE DATA; Schema: public; Owner: rdoni
+--
+
+COPY public.groups (id, course_id, teacher_id, members, price, start, "end", duration, days, in_month, active) FROM stdin;
+1	2	2	12	300000	12:00	14:00	3	[Se, pa, sha]	3	t
+2	2	1	15	500000	16:00	18:00	2	[Se, pa, sha]	22	t
+4	1	4	22	350000	13:00	17:00	2	belgilanmagan	24	f
+5	1	4	7	300000	12:00	14:00	3	[Se, pa, sha]	3	t
+3	2	3	10	350000	15:00	19:00	5	belgilanmagan	15	t
+\.
+
+
+--
+-- Data for Name: individuals; Type: TABLE DATA; Schema: public; Owner: rdoni
+--
+
+COPY public.individuals (id, course_id, teacher_id, members, price, start, "end", duration, days, in_month, active) FROM stdin;
+5	2	1	2	400000	12:00	14:00	3	[Se, pa, sha]	3	t
+6	2	3	1	800000	14:00	16:00	1	[Se, pa, sha]	12	t
+8	1	4	1	1000000	9:00	12:00	4	[Se, pa, sha]	24	t
+9	1	4	1	1300000	14:00	18:00	1	[Se, pa, sha]	18	t
+7	2	2	1	700000	18:00	10:00	2	[Du, Se, pa, sha]	20	t
+\.
+
+
+--
+-- Data for Name: news; Type: TABLE DATA; Schema: public; Owner: rdoni
+--
+
+COPY public.news (id, img, video, title, subtitle) FROM stdin;
+2	http://127.0.0.1:5000/display/2e5a5967-12b9-41ef-92db-194fc7a36cfd.jpg	http://127.0.0.1:5000/display/5da4d47c-292d-4139-b04f-57ee1529357c.mp4	Qabul boshlandi	Kaatta matin bor bu yerda
+3	http://127.0.0.1:5000/display/bd01153f-57e3-4ef0-87fb-0804bd1ebe9d.jpg	http://127.0.0.1:5000/display/fc8c7fbd-ab18-4ad8-844b-0bc6a0471bbb.mp4	Ikkinchi yangilik	Kaatta matin bor bu yerda
+4	http://127.0.0.1:5000/display/5edf8812-3f7c-41c1-914a-54ac830cfcb3.jpg	http://127.0.0.1:5000/display/988b8d91-06c3-4b71-a63c-1ad58d47fec1.mp4	yangi sarlavha	yangilangan matin
+\.
+
+
+--
+-- Data for Name: teachers; Type: TABLE DATA; Schema: public; Owner: rdoni
+--
+
+COPY public.teachers (id, first_name, last_name, description, img) FROM stdin;
+1	Ali	Valiyev	juda kop fanlar nomzodi :)	http://127.0.0.1:5000/display/35d026d1-c4d8-4d66-b084-3c8b9a6b8491.jpg
+2	Shermat	Eshmatov		http://127.0.0.1:5000/display/11554fb5-6af3-4fa0-b78f-c333e262578f.jpg
+3	John	Smith	Avstraliyalik	http://127.0.0.1:5000/display/87ae97be-dd19-4d86-bad9-2e44f0edb302.jpg
+4	Akbar	Jakbarov		http://127.0.0.1:5000/display/5a068767-72df-4b5d-82b6-22fcf8ce3f32.jpg
+5	Mr Bob	Johnson	15 yillik tajriba va hokazolar	http://127.0.0.1:5000/display/995f10bd-dc8c-40a9-9df3-a1bea9da4a18.jpg
+\.
+
+
+--
+-- Name: awards_id_seq; Type: SEQUENCE SET; Schema: public; Owner: rdoni
+--
+
+SELECT pg_catalog.setval('public.awards_id_seq', 3, true);
+
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: rdoni
+--
+
+SELECT pg_catalog.setval('public.categories_id_seq', 4, true);
+
+
+--
+-- Name: certifications_id_seq; Type: SEQUENCE SET; Schema: public; Owner: rdoni
+--
+
+SELECT pg_catalog.setval('public.certifications_id_seq', 4, true);
+
+
+--
+-- Name: courses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: rdoni
+--
+
+SELECT pg_catalog.setval('public.courses_id_seq', 12, true);
+
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: rdoni
+--
+
+SELECT pg_catalog.setval('public.groups_id_seq', 6, true);
+
+
+--
+-- Name: individuals_id_seq; Type: SEQUENCE SET; Schema: public; Owner: rdoni
+--
+
+SELECT pg_catalog.setval('public.individuals_id_seq', 10, true);
+
+
+--
+-- Name: news_id_seq; Type: SEQUENCE SET; Schema: public; Owner: rdoni
+--
+
+SELECT pg_catalog.setval('public.news_id_seq', 5, true);
+
+
+--
+-- Name: teachers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: rdoni
+--
+
+SELECT pg_catalog.setval('public.teachers_id_seq', 6, true);
+
+
+--
+-- Name: awards awards_pkey; Type: CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.awards
+    ADD CONSTRAINT awards_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: categories categories_name_key; Type: CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.categories
+    ADD CONSTRAINT categories_name_key UNIQUE (name);
+
+
+--
+-- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.categories
+    ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: certifications certifications_pkey; Type: CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.certifications
+    ADD CONSTRAINT certifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: courses courses_img_key; Type: CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.courses
+    ADD CONSTRAINT courses_img_key UNIQUE (img);
+
+
+--
+-- Name: courses courses_pkey; Type: CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.courses
+    ADD CONSTRAINT courses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: groups groups_pkey; Type: CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: individuals individuals_pkey; Type: CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.individuals
+    ADD CONSTRAINT individuals_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: news news_pkey; Type: CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.news
+    ADD CONSTRAINT news_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: teachers teachers_pkey; Type: CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.teachers
+    ADD CONSTRAINT teachers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: certifications certifications_teacher_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.certifications
+    ADD CONSTRAINT certifications_teacher_id_fkey FOREIGN KEY (teacher_id) REFERENCES public.teachers(id);
+
+
+--
+-- Name: courses courses_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.courses
+    ADD CONSTRAINT courses_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.categories(id);
+
+
+--
+-- Name: groups groups_course_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT groups_course_id_fkey FOREIGN KEY (course_id) REFERENCES public.courses(id);
+
+
+--
+-- Name: groups groups_teacher_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT groups_teacher_id_fkey FOREIGN KEY (teacher_id) REFERENCES public.teachers(id);
+
+
+--
+-- Name: individuals individuals_course_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.individuals
+    ADD CONSTRAINT individuals_course_id_fkey FOREIGN KEY (course_id) REFERENCES public.courses(id);
+
+
+--
+-- Name: individuals individuals_teacher_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.individuals
+    ADD CONSTRAINT individuals_teacher_id_fkey FOREIGN KEY (teacher_id) REFERENCES public.teachers(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
