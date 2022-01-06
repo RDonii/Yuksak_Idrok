@@ -1,3 +1,4 @@
+from flask.json import jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Boolean
 import os
@@ -334,4 +335,42 @@ class News(db.Model):
             'video': self.video,
             'title': self.title,
             'subtitle': self.subtitle
+        }
+
+class Messages(db.Model):
+    __tablename__ = 'messages'
+
+    id = Column(Integer, primary_key=True)
+    email = Column(String, nullable=True)
+    phone = Column(String, nullable=True)
+    title = Column(String, nullable=False)
+    text = Column(String, nullable=False)
+    done = Column(Boolean, nullable=False ,default=False)
+
+    def __init__(self, email, phone, title, text, done):
+        self.email = email
+        self.phone = phone
+        self.title = title
+        self.text = text
+        self.done = done
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    def update(self):
+        db.session.commit()
+    
+    def delete(self):
+        db.session.delete()
+        db.session.commit()
+    
+    def format(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'phone': self.phone,
+            'title': self.title,
+            'text': self.text,
+            'done': self.done
         }

@@ -4,7 +4,7 @@ from flask.helpers import url_for
 from flask.json import jsonify
 from sqlalchemy.sql.functions import func
 from werkzeug.utils import redirect, secure_filename
-from database.models import Categories, Courses, Teachers, Individuals, Groups, Certifications, News, Awards, create_db, db
+from database.models import Categories, Courses, Teachers, Individuals, Groups, Certifications, News, Awards, Messages, create_db, db
 from flask_cors import CORS
 import uuid
 from auth.auth import get_loged, login_required
@@ -36,7 +36,7 @@ def create_app(test_config=None):
     app.secret_key = 'you_cant_hack_anyway'
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     
-
+    #admin_page ga kirish uchun
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -57,24 +57,8 @@ def create_app(test_config=None):
 
     #kategoriya va kurslar uchun endpointlar
     
-    @app.route('/categories', methods=["GET", "POST"])
+    @app.route('/categories')
     def all_categories():
-        if request.method == 'POST':
-            data = request.get_json()
-            name = data.get('name')
-
-            if name and len(name) != 0:
-                check_query = Categories.query.filter(func.lower(Categories.name)==func.lower(name)).one_or_none()
-                if check_query:
-                    abort(422, 'Bu nomdagi kategoriya mavjud.')
-                new_categoty = Categories(name)
-                new_categoty.insert()
-                return jsonify({
-                    'success': True
-                })
-            else:
-                abort(400, 'Yangi kategoriyaga nom bering.')
-
         all_categories_query = Categories.query.all()
         all_categories_formated = [category.format() for category in all_categories_query]
         count = len(all_categories_formated)
@@ -84,12 +68,46 @@ def create_app(test_config=None):
             'count': count
         })
 
-    @app.route('/categories/<int:category_id>', methods=['GET', 'PATCH', 'DELETE'])
+    @app.route('/categories', methods=["POST"])
+    @login_required
+    def add_category(payload):
+        data = request.get_json()
+        name = data.get('name')
+
+        if name and len(name) != 0:
+            check_query = Categories.query.filter(func.lower(Categories.name)==func.lower(name)).one_or_none()
+            if check_query:
+                abort(422, 'Bu nomdagi kategoriya mavjud.')
+            try:
+                new_categoty = Categories(name)
+                new_categoty.insert()
+            except:
+                abort(500, 'Serverda ichki xatolik.')
+            return jsonify({
+                'success': True
+            })
+        else:
+            abort(400, 'Yangi kategoriyaga nom bering.')
+
+    @app.route('/categories/<int:category_id>')
     def category_by_id(category_id):
         category = Categories.query.filter(Categories.id==category_id).one_or_none()
         if category is None:
             abort(404, 'Ushbu kategoriya mavjud emas.')
 
+        category_name = category.name
+
+        return jsonify({
+            "name": category_name
+        })
+
+    @app.route('/categories/<int:category_id>', methods=['PATCH', 'DELETE'])
+    @login_required
+    def implement_category_by_id(payload, category_id):
+        category = Categories.query.filter(Categories.id==category_id).one_or_none()
+        if category is None:
+            abort(404, 'Ushbu kategoriya mavjud emas.')
+        
         if request.method == 'PATCH':
             data = request.get_json()
             name = data.get("name")
@@ -110,8 +128,6 @@ def create_app(test_config=None):
                     abort(500, 'Serverda ichki xatolik.')
             else:
                 abort(400, 'Yangi kategoriyaga nom bering.')
-
-            
 
         if request.method == 'DELETE':
             courses = Courses.query.filter(Courses.category_id == category_id).all()
@@ -150,13 +166,7 @@ def create_app(test_config=None):
                 db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
 
-        category_name = category.name
-
-        return jsonify({
-            "name": category_name
-        })
-
-    @app.route('/categories/<int:category_id>/courses', methods=["GET"])
+    @app.route('/categories/<int:category_id>/courses')
     def get_courses_by_category(category_id):
         courses_query = Courses.query.filter(Courses.category_id==category_id).all()
         courses_formated = [course.format() for course in courses_query]
@@ -167,49 +177,8 @@ def create_app(test_config=None):
             "count": count
         })
     
-    @app.route('/courses', methods=["GET", "POST"])
+    @app.route('/courses', methods=["GET"])
     def all_courses():
-        if request.method == 'POST':
-            category_name = request.form.get('category')
-            title = request.form.get('title')
-            description = request.form.get('description')
-            file = request.files.get('image')
-
-            if category_name is None or title is None:
-                abort(400, 'Kurs nomi va kategoriyasi kiritilishi shart')
-            if len(category_name) == 0 or len(title) == 0:
-                abort(400, "Bo'sh kurs nomi va kategoriyasi qabul qilinmaydi.")
-            if file is None:
-                img = ''
-            elif allowed_img(file.filename):
-                filename = file.filename
-                filename = str(uuid.uuid4()) + '.' +filename.split('.')[::-1][0]
-                filename = secure_filename(filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                img = (request.base_url).replace(url_for('all_courses'), '/display/') + filename
-            else:
-                abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
-
-            check_query = Courses.query.filter(func.lower(Courses.title)==func.lower(title)).one_or_none()
-            if check_query:
-                abort(422, 'Bu nomdagi kurs mavjud.')
-
-            category_query = Categories.query.filter(func.lower(Categories.name) == func.lower(category_name)).one_or_none()
-            if category_query is None:
-                abort(404, 'Mavjud kategoriyalardan birini tanlang.')
-            category_id = category_query.id
-
-            try:
-                new_course = Courses(category_id, title, img, description)
-                new_course.insert()
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-            
-            return jsonify({
-                'success': True
-            })
-
         page = request.args.get("page", 1, type=int)
         limit = request.args.get("limit", 8, type=int)
         all_courses_query = Courses.query.all()
@@ -224,13 +193,69 @@ def create_app(test_config=None):
             "count": count
         })
 
-    @app.route('/courses/<int:course_id>', methods = ['GET', 'PATCH', 'DELETE'])
+    @app.route('/courses', methods=["POST"])
+    @login_required
+    def add_courses(payload):
+        category_name = request.form.get('category')
+        title = request.form.get('title')
+        description = request.form.get('description')
+        file = request.files.get('image')
+
+        if category_name is None or title is None:
+            abort(400, 'Kurs nomi va kategoriyasi kiritilishi shart')
+        if len(category_name) == 0 or len(title) == 0:
+            abort(400, "Bo'sh kurs nomi va kategoriyasi qabul qilinmaydi.")
+        if file is None:
+            img = ''
+        elif allowed_img(file.filename):
+            filename = file.filename
+            filename = str(uuid.uuid4()) + '.' +filename.split('.')[::-1][0]
+            filename = secure_filename(filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            img = (request.base_url).replace(url_for('all_courses'), '/display/') + filename
+        else:
+            abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
+
+        check_query = Courses.query.filter(func.lower(Courses.title)==func.lower(title)).one_or_none()
+        if check_query:
+            abort(422, 'Bu nomdagi kurs mavjud.')
+
+        category_query = Categories.query.filter(func.lower(Categories.name) == func.lower(category_name)).one_or_none()
+        if category_query is None:
+            abort(404, 'Mavjud kategoriyalardan birini tanlang.')
+        category_id = category_query.id
+
+        try:
+            new_course = Courses(category_id, title, img, description)
+            new_course.insert()
+        except:
+            db.session.rollback()
+            abort(500, 'Serverda ichki xatolik.')
+        
+        return jsonify({
+            'success': True
+        })
+
+    @app.route('/courses/<int:course_id>')
     def course_by_id(course_id):
 
         course = Courses.query.filter(Courses.id==course_id).one_or_none()
         if course is None:
             abort(404, "So`ralgan kurs bazada mavjud emas.")
 
+        course_formated = [course.format()]
+
+        return jsonify({
+            "course": course_formated
+        })
+
+    @app.route('/courses/<int:course_id>', methods = ['PATCH', 'DELETE'])
+    @login_required
+    def implement_course_by_id(payload, course_id):
+        course = Courses.query.filter(Courses.id==course_id).one_or_none()
+        if course is None:
+            abort(404, "So`ralgan kurs bazada mavjud emas.")
+        
         if request.method == 'DELETE':
             #agar kursga tegishli guruhlar mavjud bo'lsa avval ularni o'chiradi.
             individuals = Individuals.query.filter(Individuals.course_id == course_id).all()
@@ -295,13 +320,7 @@ def create_app(test_config=None):
                 "seccess": True
             })
 
-        course_formated = [course.format()]
-
-        return jsonify({
-            "course": course_formated
-        })
-
-    @app.route('/individuals', methods=['GET'])
+    @app.route('/individuals')
     def get_all_individual_course():
         individuals = Individuals.query.all()
         individuals_formated = [i.format() for i in individuals]
@@ -312,45 +331,11 @@ def create_app(test_config=None):
             'count': count
         })
 
-    @app.route('/courses/<int:course_id>/individuals', methods=['GET', 'POST'])
+    @app.route('/courses/<int:course_id>/individuals')
     def individuals_by_course(course_id):
-
         course = Courses.query.filter(Courses.id==course_id).one_or_none()
         if course is None:
             abort(404, "So`ralgan kurs bazada mavjud emas.")
-
-        if request.method == 'POST':
-            data = request.get_json()
-
-            teacher_id = data.get('teacher_id')
-            members = data.get('members', 0)
-            price = data.get('price')
-            start = data.get('start', 'belgilanmagan')
-            end = data.get('end', 'belgilanmagan')
-            duration = data.get('duration')
-            days = data.get('days', 'belgilanmagan')
-            in_month = data.get('in_month')
-            active = data.get('active', False)
-
-            if teacher_id is None:
-                abort(400, 'Mavjud o`qituvchilardan birini tanlang.')
-            if price is None:
-                abort(400, 'Kurs narxini kiriting.')
-            if duration is None:
-                abort(400, 'Kurs darslari necha soatdan bo`lishini kiriting.')
-            if in_month is None:
-                abort(400, 'Kurs darslari bir oyda necha marta bo`lishini kiriting.')
-            
-            try:
-                new_individual = Individuals(course_id, teacher_id, members, price, start, end, duration, days, in_month, active)
-                new_individual.insert()
-                return jsonify({
-                    'success': True
-                })
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-
         individuals = Individuals.query.filter(Individuals.course_id==course_id).all()
         individuals_formated = [i.format() for i in individuals]
         count = len(individuals_formated)
@@ -360,8 +345,59 @@ def create_app(test_config=None):
             'count': count
         })
 
-    @app.route('/individuals/<int:individual_id>', methods=['GET', 'PATCH', 'DELETE'])
+    @app.route('/courses/<int:course_id>/individuals', methods=['POST'])
+    @login_required
+    def add_individuals_to_course(payload, course_id):
+        course = Courses.query.filter(Courses.id==course_id).one_or_none()
+        if course is None:
+            abort(404, "So`ralgan kurs bazada mavjud emas.")
+        
+        data = request.get_json()
+
+        teacher_id = data.get('teacher_id')
+        members = data.get('members', 0)
+        price = data.get('price')
+        start = data.get('start', 'belgilanmagan')
+        end = data.get('end', 'belgilanmagan')
+        duration = data.get('duration')
+        days = data.get('days', 'belgilanmagan')
+        in_month = data.get('in_month')
+        active = data.get('active', False)
+
+        if teacher_id is None:
+            abort(400, 'Mavjud o`qituvchilardan birini tanlang.')
+        if price is None:
+            abort(400, 'Kurs narxini kiriting.')
+        if duration is None:
+            abort(400, 'Kurs darslari necha soatdan bo`lishini kiriting.')
+        if in_month is None:
+            abort(400, 'Kurs darslari bir oyda necha marta bo`lishini kiriting.')
+        
+        try:
+            new_individual = Individuals(course_id, teacher_id, members, price, start, end, duration, days, in_month, active)
+            new_individual.insert()
+            return jsonify({
+                'success': True
+            })
+        except:
+            db.session.rollback()
+            abort(500, 'Serverda ichki xatolik.')
+
+    @app.route('/individuals/<int:individual_id>')
     def individuals_by_id(individual_id):
+        
+        individual = Individuals.query.filter(Individuals.id==individual_id).one_or_none()
+        if individual == None:
+            abort(404, 'So`ralgan individual kurs mavjud emas.')
+        
+        individual_formated = [individual.format()]
+        return ({
+            'individual': individual_formated
+        })
+
+    @app.route('/individuals/<int:individual_id>', methods=['PATCH', 'DELETE'])
+    @login_required
+    def implement_individuals_by_id(payload, individual_id):
         
         individual = Individuals.query.filter(Individuals.id==individual_id).one_or_none()
         if individual == None:
@@ -418,12 +454,7 @@ def create_app(test_config=None):
                 db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')    
         
-        individual_formated = [individual.format()]
-        return ({
-            'individual': individual_formated
-        })
-
-    @app.route('/groups', methods=['GET'])
+    @app.route('/groups')
     def get_all_group_course():
         groups = Groups.query.all()
         groups_formated = [g.format() for g in groups]
@@ -434,44 +465,12 @@ def create_app(test_config=None):
             'count': count
         })
 
-    @app.route('/courses/<int:course_id>/groups', methods=['GET', 'POST'])
+    @app.route('/courses/<int:course_id>/groups')
     def groups_by_course(course_id):
 
         course = Courses.query.filter(Courses.id==course_id).one_or_none()
         if course is None:
             abort(404, "So`ralgan kurs bazada mavjud emas.")
-
-        if request.method == 'POST':
-            data = request.get_json()
-
-            teacher_id = data.get('teacher_id')
-            members = data.get('members', 0)
-            price = data.get('price')
-            start = data.get('start', 'belgilanmagan')
-            end = data.get('end', 'belgilanmagan')
-            duration = data.get('duration')
-            days = data.get('days', 'belgilanmagan')
-            in_month = data.get('in_month')
-            active = data.get('active', False)
-
-            if teacher_id is None:
-                abort(400, 'Mavjud o`qituvchilardan birini tanlang.')
-            if price is None:
-                abort(400, 'Kurs narxini kiriting.')
-            if duration is None:
-                abort(400, 'Kurs darslari necha soatdan bo`lishini kiriting.')
-            if in_month is None:
-                abort(400, 'Kurs darslari bir oyda necha marta bo`lishini kiriting.')
-            
-            try:
-                new_group = Groups(course_id, teacher_id, members, price, start, end, duration, days, in_month, active)
-                new_group.insert()
-                return jsonify({
-                    'success': True
-                })
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')                
 
         groups = Groups.query.filter(Groups.course_id==course_id).all()
         groups_formated = [g.format() for g in groups]
@@ -482,13 +481,63 @@ def create_app(test_config=None):
             'count': count
         })
 
-    @app.route('/groups/<int:group_id>', methods=['GET', 'PATCH', 'DELETE'])
-    def groups_by_id(group_id):
+    @app.route('/courses/<int:course_id>/groups', methods=['POST'])
+    @login_required
+    def add_groups_by_course(payload, course_id):
+
+        course = Courses.query.filter(Courses.id==course_id).one_or_none()
+        if course is None:
+            abort(404, "So`ralgan kurs bazada mavjud emas.")
+
+        data = request.get_json()
+
+        teacher_id = data.get('teacher_id')
+        members = data.get('members', 0)
+        price = data.get('price')
+        start = data.get('start', 'belgilanmagan')
+        end = data.get('end', 'belgilanmagan')
+        duration = data.get('duration')
+        days = data.get('days', 'belgilanmagan')
+        in_month = data.get('in_month')
+        active = data.get('active', False)
+
+        if teacher_id is None:
+            abort(400, 'Mavjud o`qituvchilardan birini tanlang.')
+        if price is None:
+            abort(400, 'Kurs narxini kiriting.')
+        if duration is None:
+            abort(400, 'Kurs darslari necha soatdan bo`lishini kiriting.')
+        if in_month is None:
+            abort(400, 'Kurs darslari bir oyda necha marta bo`lishini kiriting.')
         
+        try:
+            new_group = Groups(course_id, teacher_id, members, price, start, end, duration, days, in_month, active)
+            new_group.insert()
+            return jsonify({
+                'success': True
+            })
+        except:
+            db.session.rollback()
+            abort(500, 'Serverda ichki xatolik.')                
+
+    @app.route('/groups/<int:group_id>')
+    def groups_by_id(group_id):
         group = Groups.query.filter(Groups.id==group_id).one_or_none()
         if group == None:
             abort(404, 'So`ralgan individual kurs mavjud emas.')
         
+        group_formated = group.format()
+        return ({
+            'group': group_formated
+        })
+
+    @app.route('/groups/<int:group_id>', methods=['PATCH', 'DELETE'])
+    @login_required
+    def implement_groups_by_id(payload, group_id):
+        group = Groups.query.filter(Groups.id==group_id).one_or_none()
+        if group == None:
+            abort(404, 'So`ralgan individual kurs mavjud emas.')
+
         if request.method == 'PATCH':
             data = request.get_json()
 
@@ -540,42 +589,10 @@ def create_app(test_config=None):
                 db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')                    
         
-        group_formated = group.format()
-        return ({
-            'group': group_formated
-        })
-
     #o'qituvchi va sertifikatlar uchun endpointlar
-    @app.route('/teachers', methods=["GET", "POST"])
+    @app.route('/teachers')
     def all_teachers():
-        if request.method == 'POST':
-            first_name = request.form.get('first_name')
-            last_name = request.form.get('last_name', '')
-            description = request.form.get('description', '')
-            file = request.files.get('image')
-
-            if first_name is None:
-                abort(400, 'O`qituvchi ismini kiritish zarur.')
-            if file is None:
-                img = ''
-            elif allowed_img(file.filename):
-                filename = file.filename
-                filename = str(uuid.uuid4()) + '.' + filename.split('.')[::-1][0]
-                filename = secure_filename(filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename ))
-                img = (request.base_url).replace(url_for('all_teachers'), '/display/') + filename
-            else:
-                abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
-            try:
-                new_teacher = Teachers(first_name, last_name, description, img)
-                new_teacher.insert()
-                return jsonify({
-                    'success': True
-                })
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')                
-
+        
         teachers = Teachers.query.all()
         teachers_formated = [t.format() for t in teachers]
         count = len(teachers_formated)
@@ -584,12 +601,54 @@ def create_app(test_config=None):
             'count': count
         })
 
-    @app.route('/teachers/<int:teacher_id>', methods=["GET", "PATCH", "DELETE"])
+    @app.route('/teachers', methods=["POST"])
+    @login_required
+    def add_teachers(payload):
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name', '')
+        description = request.form.get('description', '')
+        file = request.files.get('image')
+
+        if first_name is None:
+            abort(400, 'O`qituvchi ismini kiritish zarur.')
+        if file is None:
+            img = ''
+        elif allowed_img(file.filename):
+            filename = file.filename
+            filename = str(uuid.uuid4()) + '.' + filename.split('.')[::-1][0]
+            filename = secure_filename(filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename ))
+            img = (request.base_url).replace(url_for('all_teachers'), '/display/') + filename
+        else:
+            abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
+        try:
+            new_teacher = Teachers(first_name, last_name, description, img)
+            new_teacher.insert()
+            return jsonify({
+                'success': True
+            })
+        except:
+            db.session.rollback()
+            abort(500, 'Serverda ichki xatolik.')                
+
+    @app.route('/teachers/<int:teacher_id>')
     def teachers_by_id(teacher_id):
         teacher = Teachers.query.filter(Teachers.id==teacher_id).one_or_none()
         if teacher is None:
+            abort(404, 'So`ralgan o`qituvchi bazada mavjud emas.')            
+
+        teacher_formated = teacher.format()
+        return jsonify({
+            'teacher': teacher_formated
+        })
+
+    @app.route('/teachers/<int:teacher_id>', methods=["PATCH", "DELETE"])
+    @login_required
+    def implement_teachers_by_id(payload, teacher_id):
+        teacher = Teachers.query.filter(Teachers.id==teacher_id).one_or_none()
+        if teacher is None:
             abort(404, 'So`ralgan o`qituvchi bazada mavjud emas.')
-        
+
         if request.method == 'PATCH':
             first_name = request.form.get('first_name')
             last_name = request.form.get('last_name')
@@ -633,13 +692,7 @@ def create_app(test_config=None):
                 })
             except:
                 db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')                
-
-        teacher_formated = teacher.format()
-        return jsonify({
-            'teacher': teacher_formated
-        })
-
+                abort(500, 'Serverda ichki xatolik.')
 
     @app.route('/teachers/<int:teacher_id>/courses')
     def courses_by_teacher(teacher_id):
@@ -677,38 +730,8 @@ def create_app(test_config=None):
             'count': count,
         })
 
-    @app.route('/certifications', methods = ["GET", "POST"])
-    def all_certifications():
-        if request.method == 'POST':
-            teacher_id = request.form.get('teacher_id')
-            title = request.form.get('title')
-            given_by = request.form.get('given_by', '')
-            credential = request.form.get('credential', '')
-            file = request.files.get('image')
-
-            if teacher_id is None:
-                abort(400, 'O`qituvchilardan birini tanlang.')
-            if title is None:
-                abort(400, 'Sertifikat nomini kiriting.')
-            if file is None:
-                img = ''
-            elif allowed_img(file.filename):
-                filename = file.filename
-                filename = str(uuid.uuid4()) + '.' + filename.split('.')[::-1][0]
-                filename = secure_filename(filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                img = (request.base_url).replace(url_for('all_certifications'), '/display/') + filename
-            
-            try:
-                new_certification = Certifications(teacher_id, title, given_by, credential, img)
-                new_certification.insert()
-                return jsonify({
-                    'success': True
-                })
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')
-                
+    @app.route('/certifications')
+    def all_certifications():            
     
         certifications = Certifications.query.all()
         certifications_formated = [c.format() for c in certifications]
@@ -719,12 +742,56 @@ def create_app(test_config=None):
             'count': count
         })
 
-    @app.route('/certifications/<int:certification_id>', methods=["GET", "PATCH", "DELETE"])
+    @app.route('/certifications', methods = ["POST"])
+    @login_required
+    def add_certifications(payload):
+        teacher_id = request.form.get('teacher_id')
+        title = request.form.get('title')
+        given_by = request.form.get('given_by', '')
+        credential = request.form.get('credential', '')
+        file = request.files.get('image')
+
+        if teacher_id is None:
+            abort(400, 'O`qituvchilardan birini tanlang.')
+        if title is None:
+            abort(400, 'Sertifikat nomini kiriting.')
+        if file is None:
+            img = ''
+        elif allowed_img(file.filename):
+            filename = file.filename
+            filename = str(uuid.uuid4()) + '.' + filename.split('.')[::-1][0]
+            filename = secure_filename(filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            img = (request.base_url).replace(url_for('all_certifications'), '/display/') + filename
+        
+        try:
+            new_certification = Certifications(teacher_id, title, given_by, credential, img)
+            new_certification.insert()
+            return jsonify({
+                'success': True
+            })
+        except:
+            db.session.rollback()
+            abort(500, 'Serverda ichki xatolik.')
+
+    @app.route('/certifications/<int:certification_id>')
     def certification_by_id(certification_id):
         certification = Certifications.query.filter(Certifications.id==certification_id).one_or_none()
         if certification is None:
             abort(404, 'So`ralgan sertifikat bazada mavjud emas.')
-        
+
+        certification_formated = certification.format()
+        return jsonify({
+            "certification": certification_formated
+        })
+
+    @app.route('/certifications/<int:certification_id>', methods=["PATCH", "DELETE"])
+    @login_required
+    def implement_certification_by_id(payload, certification_id):
+        certification = Certifications.query.filter(Certifications.id==certification_id).one_or_none()
+        if certification is None:
+            abort(404, 'So`ralgan sertifikat bazada mavjud emas.')
+
         if request.method == 'PATCH':
             teacher_id = request.form.get('teacher_id')
             title = request.form.get('title')
@@ -770,43 +837,8 @@ def create_app(test_config=None):
                 db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
 
-        certification_formated = certification.format()
-        return jsonify({
-            "certification": certification_formated
-        })
-
-    @app.route('/awards', methods=["GET", "POST"])
-    def all_awards():
-        if request.method == 'POST':
-            title = request.form.get('title')
-            given_by = request.form.get('given_by', '')
-            given_year = request.form.get('given_year', '')
-            credential = request.form.get('credential', '')
-            file = request.files.get('image')
-
-            if title is None:
-                abort(400, 'Mukofot nomini kiriting.')
-            
-            if file is None:
-                img = ''
-            if allowed_img(file.filename):
-                filename = file.filename
-                filename = str(uuid.uuid4()) + '.' + filename.split('.')[::-1][0]
-                filename = secure_filename(filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                img = (request.base_url).replace(url_for('all_awards'), '/display/') + filename
-            else:
-                abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
-            
-            try:
-                new_award = Awards(title, given_by, given_year, credential, img)
-                new_award.insert()
-                return jsonify({
-                    'success': True
-                })
-            except:
-                db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')                
+    @app.route('/awards')
+    def all_awards():              
 
         awards = Awards.query.all()
         awards_formated = [a.format() for a in awards]
@@ -817,12 +849,57 @@ def create_app(test_config=None):
             "count": count
         })
 
-    @app.route('/awards/<int:award_id>', methods=['GET', 'PATCH', 'DELETE'])
+    @app.route('/awards', methods=["POST"])
+    @login_required
+    def add_awards(payload):
+        title = request.form.get('title')
+        given_by = request.form.get('given_by', '')
+        given_year = request.form.get('given_year', '')
+        credential = request.form.get('credential', '')
+        file = request.files.get('image')
+
+        if title is None:
+            abort(400, 'Mukofot nomini kiriting.')
+        
+        if file is None:
+            img = ''
+        if allowed_img(file.filename):
+            filename = file.filename
+            filename = str(uuid.uuid4()) + '.' + filename.split('.')[::-1][0]
+            filename = secure_filename(filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            img = (request.base_url).replace(url_for('all_awards'), '/display/') + filename
+        else:
+            abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
+        
+        try:
+            new_award = Awards(title, given_by, given_year, credential, img)
+            new_award.insert()
+            return jsonify({
+                'success': True
+            })
+        except:
+            db.session.rollback()
+            abort(500, 'Serverda ichki xatolik.')
+
+    @app.route('/awards/<int:award_id>')
     def award_by_id(award_id):
         award = Awards.query.filter(Awards.id==award_id).one_or_none()
         if award is None:
-            abort(404, 'So`ralgan mukofot bazada mavjud emas.')
+            abort(404, 'So`ralgan mukofot bazada mavjud emas.')                    
         
+        award_formated = award.format()
+        return jsonify({
+            'award': award_formated
+        })
+
+    @app.route('/awards/<int:award_id>', methods=['PATCH', 'DELETE'])
+    @login_required
+    def implement_award_by_id(payload, award_id):
+        award = Awards.query.filter(Awards.id==award_id).one_or_none()
+        if award is None:
+            abort(404, 'So`ralgan mukofot bazada mavjud emas.')
+
         if request.method == 'PATCH':
             title = request.form.get('title')
             given_by = request.form.get('given_by')
@@ -866,74 +943,81 @@ def create_app(test_config=None):
                 })
             except:
                 db.session.rollback()
-                abort(500, 'Serverda ichki xatolik.')                     
-        
-        award_formated = award.format()
-        return jsonify({
-            'award': award_formated
-        })
-
-    #news uchun endpointlar
-    @app.route('/news', methods=["GET", "POST"])
-    def news():
-        if request.method=="GET":
-            page = request.args.get("page", 1, type=int)
-            limit = request.args.get("limit", 8, type=int)
-            all_news = News.query.order_by(News.id).all()
-            all_news_formated = [news.format() for news in all_news]
-            news_paginated = paginate(all_news_formated, limit, page)
-            count = len(all_news_formated)
-
-            return jsonify({
-                "news": news_paginated,
-                "count": count
-            })
-
-        elif request.method == 'POST':
-            title = request.form.get('title')
-            subtitle = request.form.get('subtitle')
-            image = request.files.get('image')
-            video = request.files.get('video')
-
-            if title is None or subtitle is None:
-                abort(400, 'Yangilikka sarlavha va matn kiritilishi shart')
-            if len(subtitle) == 0 or len(title) == 0:
-                abort(400, "Bo'sh yangilik qabul qilinmaydi.")
-
-            if image is None:
-                img = ''
-            elif allowed_img(image.filename):
-                i_filename = image.filename
-                i_filename = str(uuid.uuid4()) + '.' +i_filename.split('.')[::-1][0]
-                i_filename = secure_filename(i_filename)
-                image.save(os.path.join(app.config['UPLOAD_FOLDER'], i_filename))
-                img = (request.base_url).replace(url_for('news'), '/display/') + i_filename
-            else:
-                abort(415, 'Fayl ruxsat etilmagan formatda yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
-
-            if video is None:
-                video = ''
-            elif allowed_video(video.filename):
-                v_filename = video.filename
-                v_filename = str(uuid.uuid4()) + '.' +v_filename.split('.')[::-1][0]
-                v_filename = secure_filename(v_filename)
-                video.save(os.path.join(app.config['UPLOAD_FOLDER'], v_filename))
-                video = (request.base_url).replace(url_for('news'), '/display/') + v_filename
-            else:
-                abort(415, 'Fayl ruxsat etilmagan formatda yuborildi. Ruxsat etilgan formatlar: {ALLOWED_VIDEO_EXTENSIONS}')
-
-            try:
-                news = News(title, subtitle, img, video)
-                news.insert()
-                return jsonify({
-                    'success': True
-                })
-            except:
-                db.session.rollback()
                 abort(500, 'Serverda ichki xatolik.')
 
-    @app.route('/news/<int:news_id>', methods=['GET', 'PATCH', 'DELETE'])
+    #news uchun endpointlar
+    @app.route('/news')
+    def news():
+        page = request.args.get("page", 1, type=int)
+        limit = request.args.get("limit", 8, type=int)
+        all_news = News.query.order_by(News.id).all()
+        all_news_formated = [news.format() for news in all_news]
+        news_paginated = paginate(all_news_formated, limit, page)
+        count = len(all_news_formated)
+
+        return jsonify({
+            "news": news_paginated,
+            "count": count
+        })
+
+    @app.route('/news', methods=["POST"])
+    def add_news():
+        title = request.form.get('title')
+        subtitle = request.form.get('subtitle')
+        image = request.files.get('image')
+        video = request.files.get('video')
+
+        if title is None or subtitle is None:
+            abort(400, 'Yangilikka sarlavha va matn kiritilishi shart')
+        if len(subtitle) == 0 or len(title) == 0:
+            abort(400, "Bo'sh yangilik qabul qilinmaydi.")
+
+        if image is None:
+            img = ''
+        elif allowed_img(image.filename):
+            i_filename = image.filename
+            i_filename = str(uuid.uuid4()) + '.' +i_filename.split('.')[::-1][0]
+            i_filename = secure_filename(i_filename)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], i_filename))
+            img = (request.base_url).replace(url_for('news'), '/display/') + i_filename
+        else:
+            abort(415, 'Fayl ruxsat etilmagan formatda yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
+
+        if video is None:
+            video = ''
+        elif allowed_video(video.filename):
+            v_filename = video.filename
+            v_filename = str(uuid.uuid4()) + '.' +v_filename.split('.')[::-1][0]
+            v_filename = secure_filename(v_filename)
+            video.save(os.path.join(app.config['UPLOAD_FOLDER'], v_filename))
+            video = (request.base_url).replace(url_for('news'), '/display/') + v_filename
+        else:
+            abort(415, 'Fayl ruxsat etilmagan formatda yuborildi. Ruxsat etilgan formatlar: {ALLOWED_VIDEO_EXTENSIONS}')
+
+        try:
+            news = News(title, subtitle, img, video)
+            news.insert()
+            return jsonify({
+                'success': True
+            })
+        except:
+            db.session.rollback()
+            abort(500, 'Serverda ichki xatolik.')
+
+    @app.route('/news/<int:news_id>')
     def news_by_id(news_id):
+        news = News.query.get(news_id)
+        if not news:
+            abort(404, "So`ralgan yangiliklar bazada mavjud emas.")
+
+        news_formated = news.format()
+        return jsonify({
+            'news': news_formated
+        })
+
+    @app.route('/news/<int:news_id>', methods=['PATCH', 'DELETE'])
+    @login_required
+    def implement_news_by_id(payload, news_id):
         news = News.query.get(news_id)
         if not news:
             abort(404, "So`ralgan yangiliklar bazada mavjud emas.")
@@ -992,10 +1076,107 @@ def create_app(test_config=None):
                 db.session.rollback()
                 abort(422, 'Bazadan o`chirishda xatolik yuz berdi.')
 
-        news_formated = news.format()
+    #murojat xatlari uchun endpointlar
+    @app.route('/message', methods=['POST'])
+    def send_message():
+        data = request.get_json()
+
+        email = data.get('email')
+        phone = data.get('phone')
+        title = data.get('title')
+        text = data.get('text')
+
+        if not email and not phone:
+            abort(400, "Siz bilan bog'lanish uchun kontakt qoldiring.")
+        
+        try:
+            new_message = Messages(email, phone, title, text, done=False)
+            new_message.insert()
+        except:
+            abort(500, 'Serverda ichki xatolik.')
         return jsonify({
-            'news': news_formated
+            'succuss': True
         })
+
+    @app.route('/messages/all')
+    @login_required
+    def get_all_messages(payload):
+        page = request.args.get("page", 1, type=int)
+        limit = request.args.get("limit", 8, type=int)
+        all_messages = Messages.query.all()
+        messages_formated = [m.format() for m in all_messages]
+        count = len(messages_formated)
+        messages = paginate(messages_formated, limit, page)
+        return jsonify({
+            'messages': messages,
+            'count': count
+        })
+
+    @app.route('/messages/new')
+    @login_required
+    def get_new_messages(payload):
+        new_messages = Messages.query.filter(Messages.done==False).all()
+        messages_formated = [m.format() for m in new_messages]
+        count = len(messages_formated)
+        return jsonify({
+            'messages': messages_formated,
+            'count': count
+        })
+
+    @app.route('/messages/old')
+    @login_required
+    def get_old_messages(payload):
+        old_messages = Messages.query.filter(Messages.done==True).all()
+        messages_formated = [m.format() for m in old_messages]
+        count = len(messages_formated)
+        return jsonify({
+            'messages': messages_formated,
+            'count': count
+        })
+
+    @app.route('/messages/<int:message_id>')
+    @login_required
+    def get_message_by_id(payload, message_id):
+        message = Messages.query.filter(Messages.id==message_id).one_or_none()
+        if not message:
+            abort(404, 'Ushbu murojaat topilmadi.')
+
+        message_formated = message.format()
+        return jsonify({
+            'messages': message_formated
+        })
+
+    @app.route('/messages/<int:message_id>', methods=['PATCH', 'DELETE'])
+    @login_required
+    def implement_messages(payload, message_id):
+        message = Messages.query.filter(Messages.id==message_id).one_or_none()
+        if not message:
+            abort(404, 'Ushbu murojaat topilmadi.')
+        
+        if request.method == 'PATCH':
+            data = request.get_json()
+            done = data.get('done')
+
+            if not done:
+                abort(400, 'Belgilanganligi bildirilmadi.')
+            
+            try:
+                message.done = done
+                message.update()
+            except:
+                abort(500, 'Serverda ichki xatolik.')
+            return jsonify({
+                'success': True
+            })
+
+        if request.method == 'DELETE':
+            try:
+                message.delete()
+            except:
+                abort(500, 'Serverda ichki xatolik.')
+            return jsonify({
+                'success': True
+            })
 
     #medialarni tasvirlash uchun endpoint
     @app.route('/display/<filename>')
@@ -1004,17 +1185,24 @@ def create_app(test_config=None):
 
     #errorlarni front endga chiroyli yetkazib berish uchun
 
-    @app.errorhandler(404)
-    def not_found(error):
-        return jsonify({
-            'error': 404,
-            'message': error.description
-        })
-    
     @app.errorhandler(400)
     def bad_request(error):
         return jsonify({
             'error': 400,
+            'message': error.description
+        })
+    
+    @app.errorhandler(401)
+    def unauthorize(error):
+        return jsonify({
+            'error': 401,
+            'message': error.description
+        })
+
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+            'error': 404,
             'message': error.description
         })
     

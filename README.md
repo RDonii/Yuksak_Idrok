@@ -5,7 +5,7 @@
 
 ### Boshlang'ich ma'lumotlar
 - URL: Hozirda ushbu app hech qayyerga host qilinmagan va faqat local run qilinilishi mumkin. Backend app standart `http://127.0.0.1:5000/` da host bo'ladi va frontend konfiguratsiyalariga ham shu URL proxy sifatida kiritilishi talab qilinadi.
-- Authentication: ??????????????????????????????????????????????????????????????????????????.
+- Authentication: Sayt boshqaruvi uchun adminga imkoniyatlar yaratilgan bo'lib, barcha `PATCH`, `DELETE` va `POST`* metodlaridan faqatgina admin foydalana oladi. Yangi admin sifatida ro'yxatdan o'tish mumkin emas. (*`POST` metodi uchun yagona istisno - `/message` endpoint uchun token talab qilinmaydi.)
 
 
 ### Error Handling
@@ -36,7 +36,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
     - Mavjud kategoriyalarning soni va barcha kategoriyalarni o'z ichiga ogan list obyektini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/categories`
 
-``` {
+```
+{
   "categories": [
     {
       "id": 1,
@@ -58,7 +59,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
     - "name": "yangi kategoriya nomi" (required)
 - Namuna: `curl -X POST -H 'Content-Type: application/json' -d '{"name": "IT sohalari"}' http://127.0.0.1:5000/categories`
 
-```{
+```
+{
   "success": true
 }
 ```
@@ -68,7 +70,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
     - URL orqali yuborilgan id ga ega kategoriya nomini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/categories/3`
 
-```{
+```
+{
   "name": "IT sohalari"
 }
 ```
@@ -81,7 +84,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
     - "name": "kategoriya uchun yangi nom" (required)
 - Namuna: `curl -X PATCH -H 'Content-Type: application/json' -d '{"name": "Abiturientlar uchun"}' http://127.0.0.1:5000/categories/2`
 
-```{
+```
+{
   "success": true
 }
 ```
@@ -91,7 +95,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
     - URL orqali yuborilgan id ga ega kategoriyani hamda shu kategoriyaga mansub guruh va kurslarni bazadan o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuna: `curl -X DELETE http://127.0.0.1:5000/categories/2`
 
-```{
+```
+{
   "success": true
 }
 ```
@@ -101,7 +106,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
     - URL orqali yuborilgan id ga teng id ga ega kategoriyaga mansub kurslar soni va shu kurslarni o'z ichiga olgan list obyektini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/categories/4/courses`
 
-```{
+```
+{
   "count": 3,
   "courses": [
     {
@@ -141,7 +147,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
       | `limit` | bir sahifada kurslar soni | 8 |
 - Namuna: ` curl -sS 'http://127.0.0.1:5000/courses?page=2&limit=5' `
 
-```{
+```
+{
   "count": 10,
   "courses": [
     {
@@ -197,7 +204,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
       | `description` | `text` | kurs haqida | ixtiyoriy |
       | `image` | `file` | kurs uchun rasm yuklanadi | ixtiyoriy |
 - Namuna: `curl -X POST -F "category=it sohalari" -F "title=Node.js" -F "description=Boshlang'ichlar uchun" -F "image=@rasm.jpg" http://127.0.0.1:5000/courses`
-```{
+```
+{
   "success": true
 }
 ```
@@ -206,7 +214,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Umumiy;
     - URL orqali yuborilgan id ga ega kursni o'z ichiga olgan list obyektni qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/courses/5`
-```{
+```
+{
   "course": [
     {
       "category_id": 4,
@@ -231,7 +240,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
       | `description` | `text` | kurs haqida |
       | `image` | `file` | kurs uchun rasm yuklanadi |
 - Namuna: `curl -X PATCH -F 'title=Spain' -F 'image=@rasm.jpg' http://127.0.0.1:5000/courses/9`
-```{
+```
+{
   "seccess": true
 }
 ```
@@ -240,7 +250,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Umumiy: 
     - URL orqali yuborilgan id ga ega kursni hamda shu kursga mansub guruhlarni bazadan o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuna: `curl -X DELETE http://127.0.0.1:5000/courses/12`
-```{
+```
+{
   "success": true
 }
 ```
@@ -249,7 +260,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Umumiy:
     - Mavjud barcha individual kurslarni o'z ichiga olgan list obyektini va shu kurslar umumiy sonini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/individuals`
-```{
+```
+{
   "count": 5,
   "individuals": [
     {
@@ -326,7 +338,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Umumiy:
     - URL orqali yuborilgan id ga ega kursga tegishli barcha individual kurslarni o'z ichiga olgan list obyekt va ularning umumiy sonini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/courses/2/individuals`
-```{
+```
+{
   "count": 3,
   "individuals": [
     {
@@ -389,7 +402,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
       | `in_month` | `integer` | bir oydagi darslar soni | majburiy |
       | `active` | `boolean` | kursga qabul mavjudligi, masalar: `True` | ixtiyoriy, default=`False` |
 - Namuna: `curl -X POST -H 'Content-Type: application/json' -d '{"teacher_id":1, "members":2, "price":400000, "start":"12:00", "end":"14:00", "duration":3, "days":"[Se, pa, sha]", "in_month":3, "active":true}' http://127.0.0.1:5000/courses/2/individuals`
-```{
+```
+{
   "success": true
 }
 ```
@@ -398,7 +412,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Umumiy:
     - URL orqali yuborilgan id ga ega individual kursni o'z ichiga olgan list obyekt qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/individuals/7`
-```{
+```
+{
   "individual": [
     {
       "active": false,
@@ -434,7 +449,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
       | `in_month` | `integer` | bir oydagi darslar soni |
       | `active` | `boolean` | kursga qabul mavjudligi, masalar: `True` |
 - Namuna: `curl -X PATCH -H 'Content-Type: application/json' -d '{"members":1, "price":700000, "active":true}' http://127.0.0.1:5000/individuals/7`
-```{
+```
+{
   "success": true
 }
 ```
@@ -443,7 +459,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Umumiy:
     - URL orqali yuborilgan id ga ega individual kursni o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuna: `curl -X DELETE http://127.0.0.1:5000/individuals/10`
-```{
+```
+{
   "success": true
 }
 ```
@@ -452,7 +469,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Umumiy:
     - Mavjud barcha guruhlarni o'z ichiga olgan list obyektini va shu guruhlar umumiy sonini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/groups`
-```{
+```
+{
   "count": 5,
   "groups": [
     {
@@ -528,7 +546,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Umumiy:
     - URL orqali yuborilgan id ga ega kursga tegishli barcha guruhlarni o'z ichiga olgan list obyekt va ularning umumiy sonini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/courses/2/groups`
-```{
+```
+{
   "count": 3,
   "groups": [
     {
@@ -591,7 +610,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
       | `in_month` | `integer` | bir oydagi darslar soni | majburiy |
       | `active` | `boolean` | kursga qabul mavjudligi, masalar: `True` | ixtiyoriy, default=`False` |
 - Namuna: `curl -X POST -H 'Content-Type: application/json' -d '{"teacher_id":2, "members":12, "price":300000, "start":"12:00", "end":"14:00", "duration":3, "days":"[Se, pa, sha]", "in_month":3, "active":true}' http://127.0.0.1:5000/courses/2/groups`
-```{
+```
+{
   "success": true
 }
 ```
@@ -600,7 +620,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Umumiy:
     - URL orqali yuborilgan id ga ega individual kursni o'z ichiga olgan list obyekt qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/groups/3`
-```{
+```
+{
   "group": {
     "active": true,
     "course_id": 2,
@@ -634,7 +655,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
       | `in_month` | `integer` | bir oydagi darslar soni |
       | `active` | `boolean` | kursga qabul mavjudligi, masalar: `True` |
 - Namuna: `curl -X PATCH -H 'Content-Type: application/json' -d '{"members":10, "price":350000}' http://127.0.0.1:5000/groups/3`
-```{
+```
+{
   "success": true
 }
 ```
@@ -643,7 +665,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Umumiy:
     - URL orqali yuborilgan id ga ega guruhni o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuna: `curl -X DELETE http://127.0.0.1:5000/groups/6`
-```{
+```
+{
   "success": true
 }
 ```
@@ -652,7 +675,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Umumiy:
     - Mavjud barcha o'qituvchilarni o'z ichiga olgan list obyekti va ularning umumiy sonini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/teachers`
-```{
+```
+{
   "count": 4,
   "teachers": [
     {
@@ -698,7 +722,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
       | `description` | `text` | o'qituvchi haqida | ixtiyoriy |
       | `image` | `file` | o'qituvchi rasmi | ixtiyoriy |
 - Namuna: `curl -X POST -H 'Content-Type: multipart/form-data' -F 'first_name=Mr Bob' -F 'description=15 yillik tajriba va hokazolar' -F 'image=@rasm.jpg' http://127.0.0.1:5000/teachers`
-```{
+```
+{
   "success": true
 }
 ```
@@ -707,7 +732,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Umumiy:
     - URL orqali yuborilgan id ga ega o'qituvchini o'z ichiga olgan list obyektini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/teachers/4`
-```{
+```
+{
   "teacher": {
     "description": "",
     "first_name": "Akbar",
@@ -730,7 +756,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
       | `description` | `text` | o'qituvchi haqida |
       | `image` | `file` | o'qituvchi rasmi |
 - Namuna: `curl -X PATCH -H 'Content-Type: multipart/form-data' -F 'last_name=Johnson' http://127.0.0.1:5000/teachers/5`
-```{
+```
+{
   "success": true
 }
 ```
@@ -739,7 +766,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Umumiy:
     - URL orqali yuborilgan id ga ega o'qituvchini (agar unga bog'langan guruhlar mavjud bo'lmasa) bazadan o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuma: `curl -X DELETE http://127.0.0.1:5000/teachers/6`
-```{
+```
+{
   "success": true
 }
 ```
@@ -748,7 +776,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Umumiy:
     - URL orqali yuborilgan id ga ega o'qituvchiga tegishli barcha individual kurslarni va va ularning sonini, guruhiy kurslarni va ularning sonini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/teachers/4/courses`
-```{
+```
+{
   "count_groups": 2,
   "count_individuals": 2,
   "groups": [
@@ -814,7 +843,8 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Umumiy:
     - URL orqali yuborilgan id ga ega o'qituvchiga tegishli barcha sertifikatlarni o'z ichiga olgan list obyekt va ularning sonini qaytaradi.
 Namuna: `curl http://127.0.0.1:5000/teachers/4/certifications`
-```{
+```
+{
   "certifications": [
     {
       "credential": "link/to/confirm",
@@ -842,7 +872,8 @@ Namuna: `curl http://127.0.0.1:5000/teachers/4/certifications`
     - Mavjud barcha sertifikatlarni* o'z ichiga olgan list obyektini qaytaradi.
     - Sertifikatlar - o'qituvchilarga tegishli bo'lib, yutuqlari, unvon yoki sovrinlari bo'lishi mumkin.
 Namuna: `curl http://127.0.0.1:5000/certifications`
-```{
+```
+{
   "certifications": [
     {
       "credential": "link/to/confirm",
@@ -886,7 +917,8 @@ Namuna: `curl http://127.0.0.1:5000/certifications`
       | `credential` | `text` | tasdiqlovchi link | ixtiyoriy |
       | `image` | `file` | sertifikat rasmi | ixtiyoriy |
 - Namuna: `curl -X POST -H 'Content-Type: multipart/form-data' -F 'teacher_id=4' -F 'title=Data Guru' -F 'given_by=WWC inc.' -F 'credential=link/to/confirm' -F 'image=@rasm.jpg' http://127.0.0.1:5000/certifications`
-```{
+```
+{
   "success": true
 }
 ```
@@ -895,7 +927,8 @@ Namuna: `curl http://127.0.0.1:5000/certifications`
 - Umumiy:
     - URL orqali yuborilgan id ga ega sertifikatni o'z ichiga olgan list obyektini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/certifications/2`
-```{
+```
+{
   "certification": {
     "credential": "",
     "given_by": "WWC inc.",
@@ -920,7 +953,8 @@ Namuna: `curl http://127.0.0.1:5000/certifications`
       | `credential` | `text` | tasdiqlovchi link |
       | `image` | `file` | sertifikat rasmi |
 - Namuna: `curl -X PATCH -H 'Content-Type: multipart/form-data' -F 'credential=link/to/confirm' http://127.0.0.1:5000/certifications/2`
-```{
+```
+{
   "success": true
 }
 ```
@@ -929,7 +963,8 @@ Namuna: `curl http://127.0.0.1:5000/certifications`
 - Umumiy:
     - URL orqali yuborilgan id ga ega sertifikatni o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuna: `curl -X DELETE http://127.0.0.1:5000/certifications/4`
-```{
+```
+{
   "success": true
 }
 ```
@@ -939,7 +974,8 @@ Namuna: `curl http://127.0.0.1:5000/certifications`
     - Mavjud barcha yutuqlarni* o'z ichiga olgan list obyektini qaytaradi.
     - Yutuqlar - o'quv markaziga tegishli bo'lib, sovrinlari, muhofot yoki biror reytingda erishgan o'rni bo'lishi mumkin.
 Namuna: `curl http://127.0.0.1:5000/awards`
-```{
+```
+{
   "awards": [
     {
       "credential": "link/to/confirm",
@@ -974,7 +1010,8 @@ Namuna: `curl http://127.0.0.1:5000/awards`
       | `credential` | `text` | tasdiqlovchi link | ixtiyoriy |
       | `image` | `file` | rasmi | ixtiyoriy |
 - Namuna: `curl -X POST -H 'Content-Type: multipart/form-data' -F 'title=Yil markazi' -F 'given_by=WWC inc.' -F 'credential=link/to/confirm' -F 'image=@rasm.jpg' http://127.0.0.1:5000/awards`
-```{
+```
+{
   "success": true
 }
 ```
@@ -983,7 +1020,8 @@ Namuna: `curl http://127.0.0.1:5000/awards`
 - Umumiy:
     - URL orqali yuborilgan id ga ega yutuqni o'z ichiga olgan list obyektini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/awards/2`
-```{
+```
+{
   "award": {
     "credential": "link/to/news/about/this", 
     "given_by": "XTV", 
@@ -1008,7 +1046,8 @@ Namuna: `curl http://127.0.0.1:5000/awards`
       | `credential` | `text` | tasdiqlovchi link |
       | `image` | `file` | rasmi |
 - Namuna: `curl -X PATCH -H 'Content-Type: multipart/form-data' -F 'given_year=2021' http://127.0.0.1:5000/awards/2`
-```{
+```
+{
   "success": true
 }
 ```
@@ -1017,7 +1056,8 @@ Namuna: `curl http://127.0.0.1:5000/awards`
 - Umumiy:
     - URL orqali yuborilgan id ga ega yutuqni o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuna: `curl -X DELETE http://127.0.0.1:5000/awards/3`
-```{
+```
+{
   "success": true
 }
 ```
@@ -1026,7 +1066,8 @@ Namuna: `curl http://127.0.0.1:5000/awards`
 - Umumiy:
     - Mavjud barcha yangiliklarni o'z ichiga olgan list obyektini qaytaradi.
 Namuna: `curl http://127.0.0.1:5000/news`
-```{
+```
+{
   "count": 3,
   "news": [
     {
@@ -1065,7 +1106,8 @@ Namuna: `curl http://127.0.0.1:5000/news`
       | `image` | `file` | rasm | ixtiyoriy |
       | `video` | `file` | video | ixtiyoriy |
 - Namuna: `curl -X POST -H 'Content-Type: multipart/form-data' -F 'title=Qabul boshlandi' -F 'subtitle=Kaatta matin bor bu yerda' -F 'image=@rasm.jpg' -F 'video=@video.mp4' http://127.0.0.1:5000/news`
-```{
+```
+{
   "success": true
 }
 ```
@@ -1075,7 +1117,8 @@ Namuna: `curl http://127.0.0.1:5000/news`
 - Umumiy:
     - URL orqali yuborilgan id ga ega yangilikni o'z ichiga olgan list obyektini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/news/2`
-```{
+```
+{
   "news": {
     "id": 2,
     "img": "http://127.0.0.1:5000/display/2e5a5967-12b9-41ef-92db-194fc7a36cfd.jpg",
@@ -1099,7 +1142,8 @@ Namuna: `curl http://127.0.0.1:5000/news`
       | `image` | `file` | rasm |
       | `video` | `file` | video |
 - Namuna: `curl -X PATCH -H 'Content-Type: multipart/form-data' -F 'title=yangi sarlavha' -F 'subtitle=yangilangan matin' http://127.0.0.1:5000/news/4`
-```{
+```
+{
   "success": true
 }
 ```
@@ -1108,7 +1152,8 @@ Namuna: `curl http://127.0.0.1:5000/news`
 - Umumiy:
     - URL orqali yuborilgan id ga ega yangilikni o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuna: `curl -X DELETE http://127.0.0.1:5000/news/5`
-```{
+```
+{
   "success": true
 }
 ```
