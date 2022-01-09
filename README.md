@@ -31,6 +31,19 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 
 ### Endpoints 
 
+#### POST /login
+- Umumiy:
+    - Nom va parol jo'natilganda token qaytaradi.
+- Shartlar:
+    - Content-Type: application/json
+    - Nom `username` nomi bilan, parol `password` nomi bilan JSON jo'rinishida uzatilinadi.
+- Namuna: `curl -X POST -H 'Content-Type: application/json' -d '{"username": "nom", "password": "parol"}' http://127.0.0.1:5000/login`
+```
+{
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiZGV2IiwidGhpc19pcyI6ImZha2VfdG9rZW4ifQ.P0bpnDR9_k7ZLhN79LWOlypjr3EgcRfCmegmq6pZNrE"
+}
+```
+
 #### GET /categories
 - Umumiy:
     - Mavjud kategoriyalarning soni va barcha kategoriyalarni o'z ichiga ogan list obyektini qaytaradi.
@@ -1160,7 +1173,7 @@ Namuna: `curl http://127.0.0.1:5000/news`
 
 #### POST /messages
 - Umumiy:
-    - Adminga habar yuborish uchun.
+    - Adminga habar yuborish uchun. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
     - Content-Type: application/json
     - | o'zgaruvchi nomi | o'zgaruvchi turi | ta'rif | shartligi |
@@ -1170,3 +1183,145 @@ Namuna: `curl http://127.0.0.1:5000/news`
       | `title` | `text` | murojaat sarlavhasi | ixtiyoriy |
       | `text` | `text` | murojaat matni | ixtiyoriy |
 - Namuna: `curl -X POST -H 'Content-Type: application/json' -d '{"email": "nimadir@mail.ru", "phone": "+998912345678", "title": "yangi kurslar haqida", "text": "asosiy matin"}' http://127.0.0.1:5000/message`
+
+#### GET /messages/all
+- Umumiy:
+    - Barcha habarlarni o'z ichiga olgan list obyektini qaytaradi.
+- Namuna: `curl http://127.0.0.1:5000/messages/all`
+```
+{
+  "count": 4,
+  "messages": [
+    {
+      "done": false,
+      "email": "nimadir@mail.ru",
+      "id": 2,
+      "phone": "+998912345678",
+      "text": "asosiy matin",
+      "title": "yangi kurslar haqida"
+    },
+    {
+      "done": false,
+      "email": "nom@mail.ru",
+      "id": 3,
+      "phone": "+998912345678",
+      "text": "asosiy matin shu yerda",
+      "title": "nimadirlar haqida"
+    },
+    {
+      "done": true,
+      "email": "mail",
+      "id": 1,
+      "phone": "545623",
+      "text": "ashna gapla",
+      "title": "test"
+    },
+    {
+      "done": true,
+      "email": "manzil@mail.ru",
+      "id": 4,
+      "phone": "+998912345678",
+      "text": "asosiy matin shu yerda",
+      "title": "murojat haqida"
+    }
+  ]
+}
+```
+
+#### GET /messages/new
+- Umumiy:
+    - Barcha yangi(ustida ishlanmagan) murojaatlarni o'z ichiga olgan list obyektini qaytaradi.
+- Namuna: `curl http://127.0.0.1:5000/messages/new`
+```
+{
+  "count": 2,
+  "messages": [
+    {
+      "done": false,
+      "email": "nimadir@mail.ru",
+      "id": 2,
+      "phone": "+998912345678",
+      "text": "asosiy matin",
+      "title": "yangi kurslar haqida"
+    },
+    {
+      "done": false,
+      "email": "nom@mail.ru",
+      "id": 3,
+      "phone": "+998912345678",
+      "text": "asosiy matin shu yerda",
+      "title": "nimadirlar haqida"
+    }
+  ]
+}
+```
+
+#### GET /messages/old
+- Umumiy:
+    - Barcha eski(ustida ishlangan) murojaatlarni o'z ichiga olgan list obyektini qaytaradi.
+- Namuna: `curl http://127.0.0.1:5000/messages/old`
+```
+{
+  "count": 2,
+  "messages": [
+    {
+      "done": true,
+      "email": "mail",
+      "id": 1,
+      "phone": "545623",
+      "text": "ashna gapla",
+      "title": "test"
+    },
+    {
+      "done": true,
+      "email": "manzil@mail.ru",
+      "id": 4,
+      "phone": "+998912345678",
+      "text": "asosiy matin shu yerda",
+      "title": "murojat haqida"
+    }
+  ]
+}
+```
+
+#### GET /messages/{message_id}
+- Umumiy:
+    - URL orqali yuborilgan id ga ega murojaatni o'z ichiga olgan list obyektini qaytaradi.
+- Namuna: `curl http://127.0.0.1:5000/messages/2`
+```
+{
+  "messages": [
+    {
+      "done": false,
+      "email": "nimadir@mail.ru",
+      "id": 2,
+      "phone": "+998912345678",
+      "text": "asosiy matin",
+      "title": "yangi kurslar haqida"
+    }
+  ]
+}
+```
+
+#### PATCH /messages/{message_id}
+- Umumiy:
+    - URL orqali yuborilgan id ga ega murojaatni eski yoki yangi murojaatlarga ajratish uchun ishlatilinadi.
+- Shartlar:
+    - Content-Type: application/json
+    - Murojaat ustida ishlangan yoki ishlanmaganligiga  qarab mos ravishda yagona `true` yoki `false` qiymati `done` nomi bilan uzatilinadi.
+- Namuna: `curl -X PATCH -H 'Content-Type: application/json' -d '{"done": true}' http://127.0.0.1:5000/messages/1`
+```
+{
+  "success": true
+}
+```
+
+#### DELETE /messages/{message_id}
+- Umumiy:
+    - URL orqali yuborilgan id ga ega murojaatni o'chiradi.
+- Namuna: `curl -X DELETE http://127.0.0.1:5000/messages/5`
+```
+{
+  "success": true
+}
+```

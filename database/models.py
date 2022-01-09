@@ -7,10 +7,13 @@ from sqlalchemy.sql.schema import ForeignKey
 
 load_dotenv()
 
+#local run qilinganda olib tashlang.
 database_path = os.getenv("DATABASE_URL")
 if database_path and database_path.startswith("postgres://"):
     database_path = database_path.replace("postgres://", "postgresql://", 1)
 
+#local run qilinganda kamment holatidan chiqaring
+#database_path = 'postgresql://{}:{}@localhost:5432/yi'.format(os.getenv("USER"), os.getenv("PASSWORD"))
 
 db = SQLAlchemy()
 
@@ -365,7 +368,7 @@ class Messages(db.Model):
         db.session.commit()
     
     def delete(self):
-        db.session.delete()
+        db.session.delete(self)
         db.session.commit()
     
     def format(self):

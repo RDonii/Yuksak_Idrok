@@ -526,7 +526,7 @@ def create_app(test_config=None):
         if group == None:
             abort(404, 'So`ralgan individual kurs mavjud emas.')
         
-        group_formated = group.format()
+        group_formated = [group.format()]
         return ({
             'group': group_formated
         })
@@ -637,7 +637,7 @@ def create_app(test_config=None):
         if teacher is None:
             abort(404, 'So`ralgan o`qituvchi bazada mavjud emas.')            
 
-        teacher_formated = teacher.format()
+        teacher_formated = [teacher.format()]
         return jsonify({
             'teacher': teacher_formated
         })
@@ -780,7 +780,7 @@ def create_app(test_config=None):
         if certification is None:
             abort(404, 'So`ralgan sertifikat bazada mavjud emas.')
 
-        certification_formated = certification.format()
+        certification_formated = [certification.format()]
         return jsonify({
             "certification": certification_formated
         })
@@ -888,7 +888,7 @@ def create_app(test_config=None):
         if award is None:
             abort(404, 'So`ralgan mukofot bazada mavjud emas.')                    
         
-        award_formated = award.format()
+        award_formated = [award.format()]
         return jsonify({
             'award': award_formated
         })
@@ -1010,7 +1010,7 @@ def create_app(test_config=None):
         if not news:
             abort(404, "So`ralgan yangiliklar bazada mavjud emas.")
 
-        news_formated = news.format()
+        news_formated = [news.format()]
         return jsonify({
             'news': news_formated
         })
@@ -1141,7 +1141,7 @@ def create_app(test_config=None):
         if not message:
             abort(404, 'Ushbu murojaat topilmadi.')
 
-        message_formated = message.format()
+        message_formated = [message.format()]
         return jsonify({
             'messages': message_formated
         })
@@ -1159,7 +1159,6 @@ def create_app(test_config=None):
 
             if not done:
                 abort(400, 'Belgilanganligi bildirilmadi.')
-            
             try:
                 message.done = done
                 message.update()
@@ -1168,7 +1167,7 @@ def create_app(test_config=None):
             return jsonify({
                 'success': True
             })
-
+            
         if request.method == 'DELETE':
             try:
                 message.delete()
@@ -1190,42 +1189,42 @@ def create_app(test_config=None):
         return jsonify({
             'error': 400,
             'message': error.description
-        })
+        }), 400
     
     @app.errorhandler(401)
     def unauthorize(error):
         return jsonify({
             'error': 401,
             'message': error.description
-        })
+        }), 401
 
     @app.errorhandler(404)
     def not_found(error):
         return jsonify({
             'error': 404,
             'message': error.description
-        })
+        }), 404
     
     @app.errorhandler(415)
     def unsupported_media_type(error):
         return jsonify({
             'error': 415,
             'message': error.description
-        })
+        }), 415
     
     @app.errorhandler(422)
     def unprocessable(error):
         return jsonify({
             'error': 422,
             'message': error.description
-        })
+        }), 422
 
     @app.errorhandler(500)
     def internal_server_error(error):
         return jsonify ({
             'error': 500,
             'message': error.description
-        })
+        }), 500
 
     return app
 
