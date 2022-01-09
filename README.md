@@ -4,8 +4,10 @@
 ## API ma'lumatnomasi
 
 ### Boshlang'ich ma'lumotlar
-- URL: Hozirda ushbu app hech qayyerga host qilinmagan va faqat local run qilinilishi mumkin. Backend app standart `http://127.0.0.1:5000/` da host bo'ladi va frontend konfiguratsiyalariga ham shu URL proxy sifatida kiritilishi talab qilinadi.
-- Authentication: Sayt boshqaruvi uchun adminga imkoniyatlar yaratilgan bo'lib, barcha `PATCH`, `DELETE` va `POST`* metodlaridan faqatgina admin foydalana oladi. Yangi admin sifatida ro'yxatdan o'tish mumkin emas. (*`POST` metodi uchun yagona istisno - `/message` endpoint uchun token talab qilinmaydi.)
+- URL: Hozirda ushbu app heroku.com ga deploy qilingan va https://yuksak-idrok.herokuapp.com/ orqali so'rov qilinilish mumkin. Lokal ishga tushurilganda(local run) backend app standart `http://127.0.0.1:5000/` da ishga tushadi va frontend konfiguratsiyalariga ham shu URL proxy sifatida kiritilishi talab qilinadi.
+- Authentication:
+    - Sayt boshqaruvi uchun adminga imkoniyatlar yaratilgan bo'lib, barcha `PATCH`, `DELETE` va `POST`* metodlaridan faqatgina admin foydalana oladi. Yangi admin sifatida ro'yxatdan o'tish mumkin emas. (*`POST` metodi uchun yagona istisno - `/message` endpoint uchun token talab qilinmaydi.)
+    - Token so'rovlar tarkibida argument sifatida uzatilinadi. (Namuna: `http://127.0.0.1:5000/messages/all?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiZGV2IiwidGhpc19pcyI6ImZha2VfdG9rZW4ifQ.P0bpnDR9_k7ZLhN79LWOlypjr3EgcRfCmegmq6pZNrE`)
 
 
 ### Error Handling
@@ -64,7 +66,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
   "count": 2
 }
 ```
-#### POST /categories
+#### POST /categories (faqat admin)
 - Umumiy:
     - Jo'natilgan 'name' dan foydalanib yangi kategoriya yaratadi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
@@ -89,7 +91,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 }
 ```
 
-#### PATCH /categories/{category_id}
+#### PATCH /categories/{category_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega kategoriya nomini yuborilgan yangi nomga o'zgartiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
@@ -103,7 +105,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 }
 ```
 
-#### DELETE /categories/{category_id}
+#### DELETE /categories/{category_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega kategoriyani hamda shu kategoriyaga mansub guruh va kurslarni bazadan o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuna: `curl -X DELETE http://127.0.0.1:5000/categories/2`
@@ -205,7 +207,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 }
 ```
 
-#### POST /courses
+#### POST /courses (faqat admin)
 - Umumiy:
     - Yangi kurs yaratadi. Ega kategoriya nomini yuborilgan yangi nomga o'zgartiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
@@ -241,7 +243,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 }
 ```
 
-#### PATCH /courses/{course_id}
+#### PATCH /courses/{course_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega kursning ma'lumotlarini uzatilgan ma'lumotlarga o'zgartiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
@@ -259,7 +261,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 }
 ```
 
-#### DELETE /courses/{course_id}
+#### DELETE /courses/{course_id} (faqat admin)
 - Umumiy: 
     - URL orqali yuborilgan id ga ega kursni hamda shu kursga mansub guruhlarni bazadan o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuna: `curl -X DELETE http://127.0.0.1:5000/courses/12`
@@ -398,7 +400,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 }
 ```
 
-#### POST courses/{course_id}/individuals
+#### POST courses/{course_id}/individuals (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega kursga tegishli yangi individual guruh yaratadi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
@@ -445,7 +447,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 }
 ```
 
-#### PATCH /individuals/{individual_id}
+#### PATCH /individuals/{individual_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega individual kursning ma'lumotlarini o'zgartiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
@@ -468,7 +470,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 }
 ```
 
-#### DELETE /individuals/{individual_id}
+#### DELETE /individuals/{individual_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega individual kursni o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuna: `curl -X DELETE http://127.0.0.1:5000/individuals/10`
@@ -606,7 +608,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 }
 ```
 
-#### POST courses/{course_id}/groups
+#### POST courses/{course_id}/groups (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega kursga tegishli yangi guruh yaratadi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
@@ -651,7 +653,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 }
 ```
 
-#### PATCH /groups/{group_id}
+#### PATCH /groups/{group_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega guruhning ma'lumotlarini o'zgartiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
@@ -674,7 +676,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 }
 ```
 
-#### DELETE /groups/{group_id}
+#### DELETE /groups/{group_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega guruhni o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuna: `curl -X DELETE http://127.0.0.1:5000/groups/6`
@@ -724,7 +726,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 }
 ```
 
-#### POST /teachers
+#### POST /teachers (faqat admin)
 - Umumiy: Yangi o'qituvchi qo'shadi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
     - Content-Type: multipart/form-data
@@ -757,7 +759,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 }
 ```
 
-#### PATCH /teachers/{teacher_id}
+#### PATCH /teachers/{teacher_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega o'qituvchining ma'lumotlarini o'zgartiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
@@ -775,7 +777,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 }
 ```
 
-#### DELETE /teachers/{teacher_id}
+#### DELETE /teachers/{teacher_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega o'qituvchini (agar unga bog'langan guruhlar mavjud bo'lmasa) bazadan o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuma: `curl -X DELETE http://127.0.0.1:5000/teachers/6`
@@ -917,7 +919,7 @@ Namuna: `curl http://127.0.0.1:5000/certifications`
 }
 ```
 
-#### POST /certifications
+#### POST /certifications (faqat admin)
 - Umumiy:
     - Yangi sertifikat qo'shadi.
 - Shartlar:
@@ -953,7 +955,7 @@ Namuna: `curl http://127.0.0.1:5000/certifications`
 }
 ```
 
-#### PATCH /certifications/{certification_id}
+#### PATCH /certifications/{certification_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega sertifikat ma'lumotlarini o'zgartiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
@@ -972,7 +974,7 @@ Namuna: `curl http://127.0.0.1:5000/certifications`
 }
 ```
 
-#### DELETE /certifications/{certification_id}
+#### DELETE /certifications/{certification_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega sertifikatni o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuna: `curl -X DELETE http://127.0.0.1:5000/certifications/4`
@@ -1011,7 +1013,7 @@ Namuna: `curl http://127.0.0.1:5000/awards`
 }
 ```
 
-#### POST /awards
+#### POST /awards (faqat admin)
 - Umumiy: Yangi yutuq qo'shadi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
     - Content-Type: multipart/form-data
@@ -1046,7 +1048,7 @@ Namuna: `curl http://127.0.0.1:5000/awards`
 }
 ```
 
-#### PATCH /awards/{award_id}
+#### PATCH /awards/{award_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega yutuq ma'lumotlarini o'zgartiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
@@ -1065,7 +1067,7 @@ Namuna: `curl http://127.0.0.1:5000/awards`
 }
 ```
 
-#### DELETE /awards/{award_id}
+#### DELETE /awards/{award_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega yutuqni o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuna: `curl -X DELETE http://127.0.0.1:5000/awards/3`
@@ -1108,7 +1110,7 @@ Namuna: `curl http://127.0.0.1:5000/news`
 }
 ```
 
-#### POST /news
+#### POST /news (faqat admin)
 - Umumiy: Yangi yangilik qo'shadi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
     - Content-Type: multipart/form-data
@@ -1143,7 +1145,7 @@ Namuna: `curl http://127.0.0.1:5000/news`
 ```
 
 
-#### PATCH /news/{news_id}
+#### PATCH /news/{news_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega yangilik ma'lumotlarini o'zgartiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Shartlar:
@@ -1161,7 +1163,7 @@ Namuna: `curl http://127.0.0.1:5000/news`
 }
 ```
 
-#### DELETE /news/{news_id}
+#### DELETE /news/{news_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega yangilikni o'chiradi. Muvaffaqiyatli bajarilganida 'True' qiymatini qaytaradi.
 - Namuna: `curl -X DELETE http://127.0.0.1:5000/news/5`
@@ -1184,9 +1186,9 @@ Namuna: `curl http://127.0.0.1:5000/news`
       | `text` | `text` | murojaat matni | ixtiyoriy |
 - Namuna: `curl -X POST -H 'Content-Type: application/json' -d '{"email": "nimadir@mail.ru", "phone": "+998912345678", "title": "yangi kurslar haqida", "text": "asosiy matin"}' http://127.0.0.1:5000/message`
 
-#### GET /messages/all
+#### GET /messages/all (faqat admin)
 - Umumiy:
-    - Barcha habarlarni o'z ichiga olgan list obyektini qaytaradi.
+    - Barcha habarlarni o'z ichiga olgan list obyektini va ularning sonini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/messages/all`
 ```
 {
@@ -1228,9 +1230,9 @@ Namuna: `curl http://127.0.0.1:5000/news`
 }
 ```
 
-#### GET /messages/new
+#### GET /messages/new (faqat admin)
 - Umumiy:
-    - Barcha yangi(ustida ishlanmagan) murojaatlarni o'z ichiga olgan list obyektini qaytaradi.
+    - Barcha yangi(ustida ishlanmagan) murojaatlarni o'z ichiga olgan list obyektini va ularning sonini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/messages/new`
 ```
 {
@@ -1256,9 +1258,9 @@ Namuna: `curl http://127.0.0.1:5000/news`
 }
 ```
 
-#### GET /messages/old
+#### GET /messages/old (faqat admin)
 - Umumiy:
-    - Barcha eski(ustida ishlangan) murojaatlarni o'z ichiga olgan list obyektini qaytaradi.
+    - Barcha eski(ustida ishlangan) murojaatlarni o'z ichiga olgan list obyektini va ularning sonini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/messages/old`
 ```
 {
@@ -1284,9 +1286,9 @@ Namuna: `curl http://127.0.0.1:5000/news`
 }
 ```
 
-#### GET /messages/{message_id}
+#### GET /messages/{message_id} (faqat admin)
 - Umumiy:
-    - URL orqali yuborilgan id ga ega murojaatni o'z ichiga olgan list obyektini qaytaradi.
+    - URL orqali yuborilgan id ga ega murojaatni o'z ichiga olgan list obyektini va ularning sonini qaytaradi.
 - Namuna: `curl http://127.0.0.1:5000/messages/2`
 ```
 {
@@ -1303,7 +1305,7 @@ Namuna: `curl http://127.0.0.1:5000/news`
 }
 ```
 
-#### PATCH /messages/{message_id}
+#### PATCH /messages/{message_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega murojaatni eski yoki yangi murojaatlarga ajratish uchun ishlatilinadi.
 - Shartlar:
@@ -1316,7 +1318,7 @@ Namuna: `curl http://127.0.0.1:5000/news`
 }
 ```
 
-#### DELETE /messages/{message_id}
+#### DELETE /messages/{message_id} (faqat admin)
 - Umumiy:
     - URL orqali yuborilgan id ga ega murojaatni o'chiradi.
 - Namuna: `curl -X DELETE http://127.0.0.1:5000/messages/5`
