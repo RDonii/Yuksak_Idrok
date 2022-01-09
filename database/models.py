@@ -7,7 +7,7 @@ from sqlalchemy.sql.schema import ForeignKey
 
 load_dotenv()
 
-database_path = "postgresql://{}:{}@localhost:5432/yi".format(os.environ.get("USER"), os.environ.get("PASSWORD"))
+database_path = os.getenv("DATABASE_URL")
 
 db = SQLAlchemy()
 
