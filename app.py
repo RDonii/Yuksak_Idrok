@@ -50,7 +50,7 @@ def create_app(test_config=None):
                 token = get_loged(username, password)
             else:
                 abort(400, 'Parol va Username kiritilishi shart.')
-            return token
+            return jsonify({"token": token})
 
         return 'Not implemented yet'
 
