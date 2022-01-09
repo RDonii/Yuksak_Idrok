@@ -10,13 +10,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-username = os.getenv('USER').encode()
-password = os.getenv('PASSWORD').encode()
+username1 = os.getenv('ADMIN_USER').encode()
+password1 = os.getenv('ADMIN_PASSWORD').encode()
 
-sir = '69b733ad4f634ce4b00775c110659c75'
+sir = os.getenv('SIR')
 tuz = bcrypt.gensalt(12)
-us = bcrypt.hashpw(username, tuz)
-pw = bcrypt.hashpw(password, tuz)
+us = bcrypt.hashpw(username1, tuz)
+pw = bcrypt.hashpw(password1, tuz)
 
 
 def get_loged(username, password):
@@ -26,7 +26,7 @@ def get_loged(username, password):
         payload = {'role': 'admin', 'exp': (time.time() + 1800)}
         token = jwt.encode(payload, sir)
     else:
-        abort(401, 'Try again!')
+        abort(401, 'Qayta urunib ko`ring.')
     return token
 
 def token_validator(token):

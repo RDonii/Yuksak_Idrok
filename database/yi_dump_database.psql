@@ -254,6 +254,44 @@ ALTER SEQUENCE public.individuals_id_seq OWNED BY public.individuals.id;
 
 
 --
+-- Name: messages; Type: TABLE; Schema: public; Owner: rdoni
+--
+
+CREATE TABLE public.messages (
+    id integer NOT NULL,
+    email character varying(255),
+    phone character varying(255),
+    title character varying(255),
+    text character varying,
+    done boolean
+);
+
+
+ALTER TABLE public.messages OWNER TO rdoni;
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE; Schema: public; Owner: rdoni
+--
+
+CREATE SEQUENCE public.messages_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.messages_id_seq OWNER TO rdoni;
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: rdoni
+--
+
+ALTER SEQUENCE public.messages_id_seq OWNED BY public.messages.id;
+
+
+--
 -- Name: news; Type: TABLE; Schema: public; Owner: rdoni
 --
 
@@ -370,6 +408,13 @@ ALTER TABLE ONLY public.individuals ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: messages id; Type: DEFAULT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.messages ALTER COLUMN id SET DEFAULT nextval('public.messages_id_seq'::regclass);
+
+
+--
 -- Name: news id; Type: DEFAULT; Schema: public; Owner: rdoni
 --
 
@@ -401,6 +446,7 @@ COPY public.categories (id, name) FROM stdin;
 1	Til kurslari
 3	IT sohalari
 4	Abiturientlar uchun
+5	Ijtimoiy fanlar
 \.
 
 
@@ -461,6 +507,16 @@ COPY public.individuals (id, course_id, teacher_id, members, price, start, "end"
 
 
 --
+-- Data for Name: messages; Type: TABLE DATA; Schema: public; Owner: rdoni
+--
+
+COPY public.messages (id, email, phone, title, text, done) FROM stdin;
+1	mail	545623	test	ashna gapla	f
+2	nimadir@mail.ru	+998912345678	yangi kurslar haqida	asosiy matin	f
+\.
+
+
+--
 -- Data for Name: news; Type: TABLE DATA; Schema: public; Owner: rdoni
 --
 
@@ -495,7 +551,7 @@ SELECT pg_catalog.setval('public.awards_id_seq', 3, true);
 -- Name: categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: rdoni
 --
 
-SELECT pg_catalog.setval('public.categories_id_seq', 4, true);
+SELECT pg_catalog.setval('public.categories_id_seq', 5, true);
 
 
 --
@@ -524,6 +580,13 @@ SELECT pg_catalog.setval('public.groups_id_seq', 6, true);
 --
 
 SELECT pg_catalog.setval('public.individuals_id_seq', 10, true);
+
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE SET; Schema: public; Owner: rdoni
+--
+
+SELECT pg_catalog.setval('public.messages_id_seq', 2, true);
 
 
 --
@@ -602,6 +665,14 @@ ALTER TABLE ONLY public.groups
 
 ALTER TABLE ONLY public.individuals
     ADD CONSTRAINT individuals_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: rdoni
+--
+
+ALTER TABLE ONLY public.messages
+    ADD CONSTRAINT messages_pkey PRIMARY KEY (id);
 
 
 --

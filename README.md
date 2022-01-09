@@ -750,7 +750,7 @@ Ushbu API bo'yicha Request lar muvaffaqiyatsizlikga uchraganida quyidagi 5 xatol
 - Shartlar:
     - Content-Type: multipart/form-data
     - | `name` | `input type` | ta'rif |
-      | --- | --- | --- | --- |
+      | --- | --- | --- |
       | `first_name` | `text` | o'qituvchi ismi |
       | `last_name` | `text` | o'qituvchi familiyasi |
       | `description` | `text` | o'qituvchi haqida |
@@ -1157,3 +1157,16 @@ Namuna: `curl http://127.0.0.1:5000/news`
   "success": true
 }
 ```
+
+#### POST /messages
+- Umumiy:
+    - Adminga habar yuborish uchun.
+- Shartlar:
+    - Content-Type: application/json
+    - | o'zgaruvchi nomi | o'zgaruvchi turi | ta'rif | shartligi |
+      | --- | --- | --- | --- |
+      | `email` | `text` | email manzili | telefon raqam kiritilmaganda majburiy |
+      | `phone` | `text` | telefon raqami | email kiritilmaganda majburiy |
+      | `title` | `text` | murojaat sarlavhasi | ixtiyoriy |
+      | `text` | `text` | murojaat matni | ixtiyoriy |
+- Namuna: `curl -X POST -H 'Content-Type: application/json' -d '{"email": "nimadir@mail.ru", "phone": "+998912345678", "title": "yangi kurslar haqida", "text": "asosiy matin"}' http://127.0.0.1:5000/message`

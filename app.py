@@ -69,8 +69,8 @@ def create_app(test_config=None):
         })
 
     @app.route('/categories', methods=["POST"])
-    @login_required
-    def add_category(payload):
+    #login_required
+    def add_category():
         data = request.get_json()
         name = data.get('name')
 
@@ -684,7 +684,7 @@ def create_app(test_config=None):
             individuals = Individuals.query.filter(Individuals.teacher_id==teacher_id).first()
             groups = Groups.query.filter(Groups.teacher_id==teacher_id).first()
             if individuals or groups:
-                abort(422, 'Avval {} dars o`tadigan guruhlar uchun yang o`qituvchi tayinlang.'.format(teacher.first_name) )
+                abort(422, 'Avval {} dars o`tadigan guruhlar uchun yangi o`qituvchi tayinlang.'.format(teacher.first_name) )
             try:
                 teacher.delete()
                 return jsonify({
