@@ -34,7 +34,7 @@ def create_app(test_config=None):
     create_db(app)
     CORS(app)
     app.secret_key = 'you_cant_hack_anyway'
-    #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     
     #admin_page ga kirish uchun
 
