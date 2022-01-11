@@ -225,14 +225,13 @@ def create_app(test_config=None):
             abort(404, 'Mavjud kategoriyalardan birini tanlang.')
         category_id = category_query.id
 
-        #try:
-        new_course = Courses(category_id, title, img, description)
-        new_course.insert()
-        '''
+        try:
+            new_course = Courses(category_id, title, img, description)
+            new_course.insert()
         except:
             db.session.rollback()
             abort(500, 'Serverda ichki xatolik.')
-        '''
+        
         return jsonify({
             'success': True
         })
