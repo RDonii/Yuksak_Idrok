@@ -1177,11 +1177,6 @@ def create_app(test_config=None):
                 'success': True
             })
 
-    #medialarni tasvirlash uchun endpoint
-    @app.route('/display/<filename>')
-    def media_display(filename):
-        return redirect(url_for('static', filename=('/uploads/' + filename)), code=301)
-
     #errorlarni front endga chiroyli yetkazib berish uchun
 
     @app.errorhandler(400)
