@@ -212,7 +212,7 @@ def create_app(test_config=None):
             filename = str(uuid.uuid4()) + '.' +filename.split('.')[::-1][0]
             filename = secure_filename(filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            img = (request.base_url).replace(url_for('all_courses'), '/display/') + filename
+            img = request.host_url + 'static/uploads/' + filename
         else:
             abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
 
@@ -309,7 +309,7 @@ def create_app(test_config=None):
                     filename = str(uuid.uuid4()) + '.' +filename.split('.')[::-1][0]
                     filename = secure_filename(filename)
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                    img = (request.base_url).replace(url_for('course_by_id', course_id=course_id), '/display/') + filename
+                    img = request.host_url + 'static/uploads/' + filename
                     course.img = img
                 else:
                     abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
@@ -618,7 +618,7 @@ def create_app(test_config=None):
             filename = str(uuid.uuid4()) + '.' + filename.split('.')[::-1][0]
             filename = secure_filename(filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename ))
-            img = (request.base_url).replace(url_for('all_teachers'), '/display/') + filename
+            img = request.host_url + 'static/uploads/' + filename
         else:
             abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
         try:
@@ -667,7 +667,7 @@ def create_app(test_config=None):
                     filename = str(uuid.uuid4()) + '.' + filename.split('.')[::-1][0]
                     filename = secure_filename(filename)
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename ))
-                    img = (request.base_url).replace(url_for('teachers_by_id', teacher_id=teacher_id), '/display/') + filename
+                    img = request.host_url + 'static/uploads/' + filename
                     teacher.img = img
                 else:
                     abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
@@ -762,7 +762,7 @@ def create_app(test_config=None):
             filename = str(uuid.uuid4()) + '.' + filename.split('.')[::-1][0]
             filename = secure_filename(filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            img = (request.base_url).replace(url_for('all_certifications'), '/display/') + filename
+            img = request.host_url + 'static/uploads/' + filename
         
         try:
             new_certification = Certifications(teacher_id, title, given_by, credential, img)
@@ -813,7 +813,7 @@ def create_app(test_config=None):
                     filename = str(uuid.uuid4()) + '.' + filename.split('.')[::-1][0]
                     filename = secure_filename(filename)
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                    img = (request.base_url).replace(url_for('certification_by_id', certification_id=certification_id), '/display/') + filename
+                    img = request.host_url + 'static/uploads/' + filename
                     certification.img = img
                 else:
                     abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
@@ -868,7 +868,7 @@ def create_app(test_config=None):
             filename = str(uuid.uuid4()) + '.' + filename.split('.')[::-1][0]
             filename = secure_filename(filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            img = (request.base_url).replace(url_for('all_awards'), '/display/') + filename
+            img = request.host_url + 'static/uploads/' + filename
         else:
             abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
         
@@ -921,7 +921,7 @@ def create_app(test_config=None):
                     filename = str(uuid.uuid4()) + '.' + filename.split('.')[::-1][0]
                     filename = secure_filename(filename)
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                    img = (request.base_url).replace(url_for('award_by_id', '/display/')) + filename
+                    img = request.host_url + 'static/uploads/' + filename
                     award.img = img
                 else:
                     abort(415, 'Ruxsat etilmagan formatdagi fayl yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
@@ -979,7 +979,7 @@ def create_app(test_config=None):
             i_filename = str(uuid.uuid4()) + '.' +i_filename.split('.')[::-1][0]
             i_filename = secure_filename(i_filename)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], i_filename))
-            img = (request.base_url).replace(url_for('news'), '/display/') + i_filename
+            img = request.host_url + 'static/uploads/' + i_filename
         else:
             abort(415, 'Fayl ruxsat etilmagan formatda yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
 
@@ -990,7 +990,7 @@ def create_app(test_config=None):
             v_filename = str(uuid.uuid4()) + '.' +v_filename.split('.')[::-1][0]
             v_filename = secure_filename(v_filename)
             video.save(os.path.join(app.config['UPLOAD_FOLDER'], v_filename))
-            video = (request.base_url).replace(url_for('news'), '/display/') + v_filename
+            video = request.host_url + 'static/uploads/' + v_filename
         else:
             abort(415, 'Fayl ruxsat etilmagan formatda yuborildi. Ruxsat etilgan formatlar: {ALLOWED_VIDEO_EXTENSIONS}')
 
@@ -1035,7 +1035,7 @@ def create_app(test_config=None):
                         i_filename = str(uuid.uuid4()) + '.' +i_filename.split('.')[::-1][0]
                         i_filename = secure_filename(i_filename)
                         new_img.save(os.path.join(app.config['UPLOAD_FOLDER'], i_filename))
-                        img = (request.base_url).replace(url_for('news_by_id', news_id=news_id), '/display/') + i_filename
+                        img = request.host_url + 'static/uploads/' + i_filename
                         news.img = img
                     else:
                         abort(415, 'Fayl ruxsat etilmagan formatda yuborildi. Ruxsat etilgan formatlar: {ALLOWED_IMG_EXTENSIONS}')
@@ -1046,7 +1046,7 @@ def create_app(test_config=None):
                         v_filename = str(uuid.uuid4()) + '.' +v_filename.split('.')[::-1][0]
                         v_filename = secure_filename(v_filename)
                         new_video.save(os.path.join(app.config['UPLOAD_FOLDER'], v_filename))
-                        video = (request.base_url).replace(url_for('news'), '/display/') + v_filename
+                        video = request.host_url + 'static/uploads/' + v_filename
                         news.video = video
                     else:
                         abort(415, 'Fayl ruxsat etilmagan formatda yuborildi. Ruxsat etilgan formatlar: {ALLOWED_VIDEO_EXTENSIONS}')
