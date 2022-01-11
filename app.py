@@ -1218,14 +1218,14 @@ def create_app(test_config=None):
             'error': 422,
             'message': error.description
         }), 422
-    '''
+    
     @app.errorhandler(500)
     def internal_server_error(error):
         return jsonify ({
             'error': 500,
             'message': error.description
         }), 500
-    '''
+
     return app
 
 app = create_app()
