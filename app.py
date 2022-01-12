@@ -863,7 +863,7 @@ def create_app(test_config=None):
         
         if file is None:
             img = ''
-        if allowed_img(file.filename):
+        elif allowed_img(file.filename):
             filename = file.filename
             filename = str(uuid.uuid4()) + '.' + filename.split('.')[::-1][0]
             filename = secure_filename(filename)
