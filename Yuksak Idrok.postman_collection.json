@@ -1,0 +1,2488 @@
+{
+	"info": {
+		"_postman_id": "4600d134-14d6-44d4-8025-31a416513018",
+		"name": "Yuksak Idrok",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "post - /login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"admin\",\n    \"password\":\"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/login - error test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/categories",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/categories",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/categories - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"IT fanlar\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/categories",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/categories - error 422",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"aniq fanlar\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/categories",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/categories/1 - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/categories/1",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"categories",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/categories/1 - error 404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/categories/10000",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"categories",
+						"10000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/categories/3 - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"yangi kategoriya\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/categories/3?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE4MzQ4NjYuNzU5NDM0N30.DTOOiGw87t5iacQe48BdrQZaEGx2DinEG51h1E0NDKA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"categories",
+						"3"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE4MzQ4NjYuNzU5NDM0N30.DTOOiGw87t5iacQe48BdrQZaEGx2DinEG51h1E0NDKA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/categories/3 - error 400",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"aniq fanlar\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/categories/3?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE4MzczMDkuMDQ2NjM4fQ.HpPbHXPUV1yMK00mmgeZTpo_254tsuWxcnhB2JVQFQI",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"categories",
+						"3"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE4MzczMDkuMDQ2NjM4fQ.HpPbHXPUV1yMK00mmgeZTpo_254tsuWxcnhB2JVQFQI"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/categories/4 - delete success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/categories/333?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE4MzczMDkuMDQ2NjM4fQ.HpPbHXPUV1yMK00mmgeZTpo_254tsuWxcnhB2JVQFQI",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"categories",
+						"333"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE4MzczMDkuMDQ2NjM4fQ.HpPbHXPUV1yMK00mmgeZTpo_254tsuWxcnhB2JVQFQI"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/categories/4 - delete 404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/categories/3?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE4MzczMDkuMDQ2NjM4fQ.HpPbHXPUV1yMK00mmgeZTpo_254tsuWxcnhB2JVQFQI",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"categories",
+						"3"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE4MzczMDkuMDQ2NjM4fQ.HpPbHXPUV1yMK00mmgeZTpo_254tsuWxcnhB2JVQFQI"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/categories/1/courses - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/categories/1/courses",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"categories",
+						"1",
+						"courses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/courses - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/courses",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/courses - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "category",
+							"value": "aniq fanlar",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "geografiya",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "Ushbu kursda geografiya o'qitiladi",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/home/oktamjon/Music/math.jpeg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/courses?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5Njc3NTIuMzE5MTk1NX0.T41gFsAS1FaRjbmVZo9OvplSt0OpyIqWwzAL9jX5Thg",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5Njc3NTIuMzE5MTk1NX0.T41gFsAS1FaRjbmVZo9OvplSt0OpyIqWwzAL9jX5Thg"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/courses/1 - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/courses/1",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/individuals",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/individuals",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"individuals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/courses/4 - delete success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/courses/4?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5Njc3NTIuMzE5MTk1NX0.T41gFsAS1FaRjbmVZo9OvplSt0OpyIqWwzAL9jX5Thg",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses",
+						"4"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5Njc3NTIuMzE5MTk1NX0.T41gFsAS1FaRjbmVZo9OvplSt0OpyIqWwzAL9jX5Thg"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/courses/2 - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "category",
+							"value": "aniq fanlar",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "Kimyo",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "Kimyoga qiziquvchilar uchun",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/home/oktamjon/Music/math.jpeg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/courses/2?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5Njc3NTIuMzE5MTk1NX0.T41gFsAS1FaRjbmVZo9OvplSt0OpyIqWwzAL9jX5Thg",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses",
+						"2"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5Njc3NTIuMzE5MTk1NX0.T41gFsAS1FaRjbmVZo9OvplSt0OpyIqWwzAL9jX5Thg"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/courses/2 - error 400",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "category",
+							"value": "aniq fanlar",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "Kimyoga qiziquvchilar uchun",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/home/oktamjon/Music/math.jpeg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/courses/2?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5Njc3NTIuMzE5MTk1NX0.T41gFsAS1FaRjbmVZo9OvplSt0OpyIqWwzAL9jX5Thg",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses",
+						"2"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5Njc3NTIuMzE5MTk1NX0.T41gFsAS1FaRjbmVZo9OvplSt0OpyIqWwzAL9jX5Thg"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/courses/1/individuals",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"teacher_id\": 1,\n    \"members\": 15,\n    \"price\": 50,\n    \"start\": \"15-yanvar\",\n    \"end\": \"15-mart\",\n    \"duration\": 2,\n    \"days\": \"seshanba, chorshanba, juma\",\n    \"in_month\": 24,\n    \"active\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/courses/1/individuals?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NjkwNzkuNzk5MDAzfQ.-Awm8ImJWVBcLJQGu22wlca9SheRZLxUh3cmXA7AeGA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses",
+						"1",
+						"individuals"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NjkwNzkuNzk5MDAzfQ.-Awm8ImJWVBcLJQGu22wlca9SheRZLxUh3cmXA7AeGA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/courses/1/individuals error 400",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"teacher_id\": null,\n    \"members\": 10,\n    \"price\": null,\n    \"start\": \"15-yanvar\",\n    \"end\": \"15-mart\",\n    \"duration\": 2,\n    \"days\": \"Dushanba, chorshanba, juma\",\n    \"in_month\": 24,\n    \"active\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/courses/1/individuals?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NjkwNzkuNzk5MDAzfQ.-Awm8ImJWVBcLJQGu22wlca9SheRZLxUh3cmXA7AeGA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses",
+						"1",
+						"individuals"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NjkwNzkuNzk5MDAzfQ.-Awm8ImJWVBcLJQGu22wlca9SheRZLxUh3cmXA7AeGA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{host}}/teachers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/teachers",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teachers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/teachers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "first_name",
+							"value": "Mike",
+							"type": "text"
+						},
+						{
+							"key": "second_name",
+							"value": "Tyson",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "He is a good teacher :)",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/teachers?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NjkwNzkuNzk5MDAzfQ.-Awm8ImJWVBcLJQGu22wlca9SheRZLxUh3cmXA7AeGA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teachers"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NjkwNzkuNzk5MDAzfQ.-Awm8ImJWVBcLJQGu22wlca9SheRZLxUh3cmXA7AeGA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/individuals/4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"teacher_id\": 1,\n    \"members\": 7,\n    \"price\": 30,\n    \"start\": \"18-yanvar\",\n    \"end\": \"15-mart\",\n    \"duration\": 3,\n    \"days\": \"seshanba, chorshanba, juma\",\n    \"in_month\": 25,\n    \"active\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/individuals/4?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NjkwNzkuNzk5MDAzfQ.-Awm8ImJWVBcLJQGu22wlca9SheRZLxUh3cmXA7AeGA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"individuals",
+						"4"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NjkwNzkuNzk5MDAzfQ.-Awm8ImJWVBcLJQGu22wlca9SheRZLxUh3cmXA7AeGA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/individuals/4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/individuals/4?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NjkwNzkuNzk5MDAzfQ.-Awm8ImJWVBcLJQGu22wlca9SheRZLxUh3cmXA7AeGA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"individuals",
+						"4"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NjkwNzkuNzk5MDAzfQ.-Awm8ImJWVBcLJQGu22wlca9SheRZLxUh3cmXA7AeGA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/courses/1/groups - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"teacher_id\": 1,\n    \"members\": 12,\n    \"price\": 25,\n    \"start\": \"19-yanvar\",\n    \"end\": \"17-mart\",\n    \"duration\": 2,\n    \"days\": \"seshanba, chorshanba, juma\",\n    \"in_month\": 38,\n    \"active\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/courses/1/groups?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NjkwNzkuNzk5MDAzfQ.-Awm8ImJWVBcLJQGu22wlca9SheRZLxUh3cmXA7AeGA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses",
+						"1",
+						"groups"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NjkwNzkuNzk5MDAzfQ.-Awm8ImJWVBcLJQGu22wlca9SheRZLxUh3cmXA7AeGA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/courses/1/groups - error 400",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"teacher_id\": null,\n    \"members\": 18,\n    \"price\": 20,\n    \"start\": \"15-yanvar\",\n    \"end\": \"15-mart\",\n    \"duration\": 2,\n    \"days\": \"seshanba, chorshanba, juma\",\n    \"in_month\": 28,\n    \"active\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/courses/1/groups?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NjkwNzkuNzk5MDAzfQ.-Awm8ImJWVBcLJQGu22wlca9SheRZLxUh3cmXA7AeGA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"courses",
+						"1",
+						"groups"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NjkwNzkuNzk5MDAzfQ.-Awm8ImJWVBcLJQGu22wlca9SheRZLxUh3cmXA7AeGA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/groups/2 - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"teacher_id\": 1,\n    \"members\": 6,\n    \"price\": 35,\n    \"start\": \"19-yanvar\",\n    \"end\": \"25-mart\",\n    \"duration\": 2,\n    \"days\": \"seshanba, chorshanba, juma\",\n    \"in_month\": 38,\n    \"active\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/groups/2?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"groups",
+						"2"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/groups/2 - error 404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"teacher_id\": 1,\n    \"members\": 6,\n    \"price\": 35,\n    \"start\": \"19-yanvar\",\n    \"end\": \"25-mart\",\n    \"duration\": 2,\n    \"days\": \"seshanba, chorshanba, juma\",\n    \"in_month\": 38,\n    \"active\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/groups/2222?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"groups",
+						"2222"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/groups/2 - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/groups/2?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"groups",
+						"2"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/teachers - error",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "second_name",
+							"value": "Tyson",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "He is a good teacher :)",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/teachers?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teachers"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/teachers/2 - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "first_name",
+							"value": "Filip",
+							"type": "text"
+						},
+						{
+							"key": "second_name",
+							"value": "Lyuson",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "Math teacher",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/teachers/2?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teachers",
+						"2"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/teachers/2 - error",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "first_name",
+							"value": "Filip",
+							"type": "text"
+						},
+						{
+							"key": "second_name",
+							"value": "Lyuson",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "Math teacher",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/teachers/222?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teachers",
+						"222"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/teachers/2 - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/teachers/2?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teachers",
+						"2"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/teachers/1 - error",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/teachers/1?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"teachers",
+						"1"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/certifications - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "teacher_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "Good teacher",
+							"type": "text"
+						},
+						{
+							"key": "given_by",
+							"value": "Uzb Study Center",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/certifications?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"certifications"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/certifications - error",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Math teacher of the year",
+							"type": "text"
+						},
+						{
+							"key": "given_by",
+							"value": "Xalq Talimi bo'limi",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/certifications?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"certifications"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/certifications/2 - error",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "teacher_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "Excelent teacher",
+							"type": "text"
+						},
+						{
+							"key": "given_by",
+							"value": "Xalq Talimi bo'limi",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/certifications/2222222?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"certifications",
+						"2222222"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/certifications/2 -success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "teacher_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "Excelent teacher",
+							"type": "text"
+						},
+						{
+							"key": "given_by",
+							"value": "Xalq Talimi bo'limi",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/certifications/2?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"certifications",
+						"2"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/certifications/2 - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(20);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/certifications/2?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"certifications",
+						"2"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzA5NzAuNTgwMzQyfQ.Q_Bd2HsNjVB0TB5HeIpOUr-4WlMQJ1VmN_GmEk8iNNA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/awards - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "good center",
+							"type": "text"
+						},
+						{
+							"key": "given_by",
+							"value": "UZB",
+							"type": "text"
+						},
+						{
+							"key": "given_year",
+							"value": "2020",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/awards?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"awards"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/awards - error",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 415\", function () {",
+							"    pm.response.to.have.status(415);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Yilning eng yaxshi markazi",
+							"type": "text"
+						},
+						{
+							"key": "given_by",
+							"value": "XTB",
+							"type": "text"
+						},
+						{
+							"key": "given_year",
+							"value": "2021",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/home/oktamjon/Music/family-tree/config.py"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/awards?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"awards"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/awards/2 - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "best center",
+							"type": "text"
+						},
+						{
+							"key": "given_by",
+							"value": "UZB",
+							"type": "text"
+						},
+						{
+							"key": "given_year",
+							"value": "2020",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/awards/2?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"awards",
+						"2"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/awards/2 - error",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 415\", function () {",
+							"    pm.response.to.have.status(415);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Yilning eng yaxshi markazi",
+							"type": "text"
+						},
+						{
+							"key": "given_by",
+							"value": "XTB",
+							"type": "text"
+						},
+						{
+							"key": "given_year",
+							"value": "2021",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/home/oktamjon/Music/family-tree/config.py"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/awards/2?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"awards",
+						"2"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/awards/2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/awards/2?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"awards",
+						"2"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/news - success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Yuksak Idrok yilning eng yaxshi markazi bo'ldi inshaAlloh",
+							"type": "text"
+						},
+						{
+							"key": "subtitle",
+							"value": "Kecha yilning eng yaxshi o'quv markazlari tanlavi bo'ldi.",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/news?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"news"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/news - error",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/news?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"news"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/news/2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "News 2",
+							"type": "text"
+						},
+						{
+							"key": "subtitle",
+							"value": "New subtitle",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/news/2?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"news",
+						"2"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/news/2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/news/2?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"news",
+						"2"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE5NzIyNTAuMjI2NDUzNX0.5XV4wzG0SsMnVq4hFyBw_4bUf2iTlu8hbmylgxS5_EI"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiYWRtaW4iLCJleHAiOjE2NDE4MzQ4NjYuNzU5NDM0N30.DTOOiGw87t5iacQe48BdrQZaEGx2DinEG51h1E0NDKA",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "https://yuksak-idrok.herokuapp.com/"
+		}
+	]
+}
