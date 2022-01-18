@@ -70,7 +70,7 @@ def create_app(test_config=None):
 
     @app.route('/categories', methods=["POST"])
     @login_required
-    def add_category():
+    def add_category(payload):
         data = request.get_json()
         name = data.get('name')
 
