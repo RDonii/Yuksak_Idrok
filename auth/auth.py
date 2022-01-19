@@ -46,6 +46,6 @@ def login_required(f):
             except ExpiredSignatureError:
                 abort(401, 'Iltimos. Qaytadan kiring.')
             except:
-                abort('Admin sifatida kirish zarur.')
+                abort(401, 'Admin sifatida kirish zarur.')
         return f(payload, *args, **kwargs)
     return decorated
