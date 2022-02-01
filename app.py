@@ -1,9 +1,8 @@
 import os
 from flask import Flask, request, abort
-from flask.helpers import url_for
 from flask.json import jsonify
 from sqlalchemy.sql.functions import func
-from werkzeug.utils import redirect, secure_filename
+from werkzeug.utils import secure_filename
 from database.models import Categories, Courses, Teachers, Individuals, Groups, Certifications, News, Awards, Messages, create_db, db
 from flask_cors import CORS
 import uuid
@@ -183,6 +182,12 @@ def create_app(test_config=None):
         limit = request.args.get("limit", 8, type=int)
         all_courses_query = Courses.query.all()
         all_courses_formated = [course.format() for course in all_courses_query]
+        for course in all_courses_formated:
+            id = course["category_id"]
+            category = Categories.query.filter(Categories.id==id).one_or_none()
+            if not category:
+                abort(404, "Kurs kategoriyasini aniqlashda xatolik yuz berdi.")
+            course["category_name"] = category.name            
         courses_paginated = paginate(all_courses_formated, limit, page)
         count = len(all_courses_formated)
 
