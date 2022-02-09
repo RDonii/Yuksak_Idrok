@@ -410,7 +410,7 @@ class Contacts(db.Model):
     
     def format(self):
         return {
-            "phone=":  self.phone,
+            "phone":  self.phone,
             "wt": self.wt,
             "email" : self.email,
             "s_links" : self.s_links,

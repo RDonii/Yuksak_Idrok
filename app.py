@@ -1209,6 +1209,7 @@ def create_app(test_config=None):
         
         new_phone = data.get('phone')
         new_wt = data.get('wt')
+        new_email = data.get('email')
         new_s_links = data.get('s_links')
         new_address = data.get('address')
         new_ref_point = data.get('ref_point')
@@ -1223,6 +1224,8 @@ def create_app(test_config=None):
             contact.phone = new_phone
         if new_wt:
             contact.wt = new_wt
+        if new_email:
+            contact.email = new_email
         if new_s_links:
             contact.s_links = new_s_links
         if new_address:
