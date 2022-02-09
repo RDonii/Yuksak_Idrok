@@ -1190,9 +1190,9 @@ def create_app(test_config=None):
             db.session.add(contact)
             db.session.commit()
         elif len(contacts)>1:
-            contact = contacts(0)
+            contact = contacts[0]
             for c in range(1, len(contacts)):
-                con = contacts(c)
+                con = contacts[c]
                 db.session.delete(con)
                 db.session.commit()
         else:
