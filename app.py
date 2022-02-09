@@ -1219,13 +1219,20 @@ def create_app(test_config=None):
         if not contact:
             abort(404, 'Ma`lumot topilmadi!')
         
-        contact.phone = new_phone
-        contact.work_time = new_wt
-        contact.social_links = new_s_links
-        contact.addres = new_address
-        contact.mojjal = new_ref_point
-        contact.lat = new_lat
-        contact.lon = new_lon
+        if new_phone:
+            contact.phone = new_phone
+        if new_wt:
+            contact.work_time = new_wt
+        if new_s_links:
+            contact.social_links = new_s_links
+        if new_address:
+            contact.addres = new_address
+        if new_ref_point:
+            contact.mojjal = new_ref_point
+        if new_lat:
+            contact.lat = new_lat
+        if new_lon:
+            contact.lon = new_lon
 
         contact.update()
     
