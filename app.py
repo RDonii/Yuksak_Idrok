@@ -1222,13 +1222,13 @@ def create_app(test_config=None):
         if new_phone:
             contact.phone = new_phone
         if new_wt:
-            contact.work_time = new_wt
+            contact.wt = new_wt
         if new_s_links:
-            contact.social_links = new_s_links
+            contact.s_links = new_s_links
         if new_address:
-            contact.addres = new_address
+            contact.address = new_address
         if new_ref_point:
-            contact.mojjal = new_ref_point
+            contact.ref_point = new_ref_point
         if new_lat:
             contact.lat = new_lat
         if new_lon:
