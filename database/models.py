@@ -1,3 +1,4 @@
+import email
 from flask.json import jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Boolean
@@ -380,3 +381,32 @@ class Messages(db.Model):
             'text': self.text,
             'done': self.done
         }
+    
+class Contacts(db.Model):
+    __tablename__ = 'contacts'
+
+    id = Column(Integer, primary_key=True)
+    phone = Column(String, default='')
+    wt = Column(String, default='')
+    email = Column(String, default='')
+    s_links = Column(String, default='')
+    address = Column(String, default='')
+    ref_point = Column(String, default='')
+    lat = Column(String, default='')
+    lon = Column(String, default='')
+
+    def __init__(self, phone='', wt='', email='', s_link='', address='', ref_point='', lat='', lon=''):
+        self.phone = phone
+        self.wt = wt
+        self.email = email
+        self.s_links = s_link
+        self.address = address
+        self.ref_point = ref_point
+        self.lat = lat
+        self.lon = lon
+    
+    def update(self):
+        db.session.commit()
+    
+    def format(self):
+        return self.__dict__

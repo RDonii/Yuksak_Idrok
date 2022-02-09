@@ -3,7 +3,7 @@ from flask import Flask, request, abort
 from flask.json import jsonify
 from sqlalchemy.sql.functions import func
 from werkzeug.utils import secure_filename
-from database.models import Categories, Courses, Teachers, Individuals, Groups, Certifications, News, Awards, Messages, create_db, db
+from database.models import Categories, Courses, Teachers, Individuals, Groups, Certifications, News, Awards, Messages, create_db, db, Contacts
 from flask_cors import CORS
 import uuid
 from auth.auth import get_loged, login_required
@@ -1180,6 +1180,57 @@ def create_app(test_config=None):
                 abort(500, 'Serverda ichki xatolik.')
             return jsonify({
                 'success': True
+            })
+
+    @app.route('/contacts', methods=["GET"])
+    def get_contacts():
+        contacts = Contacts.query.all()
+        if len(contacts)==0:
+            contact = Contacts()
+            db.session.add(contact)
+            db.session.commit()
+        elif len(contacts)>1:
+            contact = contacts(0)
+            for c in range(1, len(contacts)):
+                con = contacts(c)
+                db.session.delete(con)
+                db.session.commit()
+        else:
+            contact = contacts(0)
+
+        response = contact.format()
+
+        return jsonify(response)
+
+    @app.route("/contacts", methods=["PATCH"])
+    @login_required
+    def update_contacts(payload):
+        data = request.get_json()
+        
+        new_phone = data.get('phone')
+        new_wt = data.get('wt')
+        new_s_links = data.get('s_links')
+        new_address = data.get('address')
+        new_ref_point = data.get('ref_point')
+        new_lat = data.get('lat')
+        new_lon = data.get('lon')
+
+        contact = Contacts.query.first()
+        if not contact:
+            abort(404, 'Ma`lumot topilmadi!')
+        
+        contact.phone = new_phone
+        contact.work_time = new_wt
+        contact.social_links = new_s_links
+        contact.addres = new_address
+        contact.mojjal = new_ref_point
+        contact.lat = new_lat
+        contact.lon = new_lon
+
+        contact.update()
+    
+        return jsonify({
+            'success': True,
             })
 
     #errorlarni front endga chiroyli yetkazib berish uchun
