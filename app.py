@@ -1196,7 +1196,7 @@ def create_app(test_config=None):
                 db.session.delete(con)
                 db.session.commit()
         else:
-            contact = contacts(0)
+            contact = contacts[0]
 
         response = contact.format()
 
