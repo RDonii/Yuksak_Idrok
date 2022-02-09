@@ -395,11 +395,11 @@ class Contacts(db.Model):
     lat = Column(String, default='')
     lon = Column(String, default='')
 
-    def __init__(self, phone='', wt='', email='', s_link='', address='', ref_point='', lat='', lon=''):
+    def __init__(self, phone='', wt='', email='', s_links='', address='', ref_point='', lat='', lon=''):
         self.phone = phone
         self.wt = wt
         self.email = email
-        self.s_links = s_link
+        self.s_links = s_links
         self.address = address
         self.ref_point = ref_point
         self.lat = lat
@@ -409,4 +409,13 @@ class Contacts(db.Model):
         db.session.commit()
     
     def format(self):
-        return self.__dict__
+        return {
+            "phone=":  self.phone,
+            "wt": self.wt,
+            "email" : self.email,
+            "s_links" : self.s_links,
+            "address" : self.address,
+            "ref_point" : self.ref_point,
+            "lat" : self.lat,
+            "lon" : self.lon
+        }
