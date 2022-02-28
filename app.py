@@ -37,7 +37,7 @@ def create_app(test_config=None):
     
     @app.route('/')
     def home_page():
-        retur '<h1>Front Endni Tezlashtiring<b>Jasur</b></h1>'
+        retur '<h1>Front Endni tezlatila :)</h1>'
     
     #admin_page ga kirish uchun
     
