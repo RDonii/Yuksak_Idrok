@@ -35,8 +35,12 @@ def create_app(test_config=None):
     app.secret_key = 'you_cant_hack_anyway'
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     
+    @app.route('/')
+    def home_page():
+        retur '<h1>Front Endni Tezlashtiring<b>Jasur</b></h1>
+    
     #admin_page ga kirish uchun
-
+    
     @app.route('/login', methods=['GET', 'POST'])
     def login():
         if request.method == 'POST':
