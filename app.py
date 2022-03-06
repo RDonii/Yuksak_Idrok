@@ -31,7 +31,7 @@ def create_app(test_config=None):
 
     app = Flask(__name__)
     create_db(app)
-    CORS(app)
+    #CORS(app)
     app.secret_key = 'you_cant_hack_anyway'
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     
