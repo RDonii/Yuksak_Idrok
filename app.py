@@ -442,7 +442,7 @@ def create_app(test_config=None):
                     individual.days = days
                 if in_month:
                     individual.in_month = in_month
-                if active:
+                if active is not None:
                     individual.active = active
 
                 individual.update()
@@ -577,7 +577,7 @@ def create_app(test_config=None):
                     group.days = days
                 if in_month:
                     group.in_month = in_month
-                if active:
+                if active is not None:
                     group.active = active
 
                 group.update()
